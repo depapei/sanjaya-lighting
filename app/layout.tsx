@@ -27,7 +27,6 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
         >
           <Navbar />
           <main>
