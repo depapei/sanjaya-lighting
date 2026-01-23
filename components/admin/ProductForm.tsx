@@ -1,190 +1,235 @@
-'use client';
+"use client";
 
+import api from "@/lib/axios";
+import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
-/*
-interface ProductFormProps {
-  product?: any;
-  isEdit?: boolean;
-}
+type ProductFormProps = {
+  initialData?: any;
+  onSuccess?: () => void;
+};
 
-const categories = [
-  'Chandelier',
-  'Pendant Light',
-  'Wall Sconce',
-  'Floor Lamp',
-  'Table Lamp',
-  'Ceiling Light',
-];
-
-export default function ProductForm({ product, isEdit = false }: ProductFormProps) {
-  const router = useRouter();
-  const { toast } = useToast();
+export default function ProductForm({
+  initialData,
+  onSuccess,
+}: ProductFormProps) {
   const [loading, setLoading] = useState(false);
-  
-  const [formData, setFormData] = useState({
-    name: product?.name || '',
-    description: product?.description || '',
-    price: product?.price || '',
-    category: product?.category || '',
-    images: product?.images?.join(', ') || '',
-    status: product?.status || 'published',
-    featured: product?.featured || false,
+  const [form, setForm] = useState({
+    Name: initialData?.Name || "",
+    Description: initialData?.Description || "",
+    CategoryID: initialData?.CategoryID || 0,
+    Price: initialData?.Price || "",
+    Stock: initialData?.Stock || 0,
+    IsFeatured: initialData?.IsFeatured || false,
+    ImageBase64: initialData?.ImageBase64 || "",
+    ImageMimeType: initialData?.ImageMimeType || "",
+    CreatedBy: initialData?.CreatedBy || "admin",
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const router = useRouter();
+
+  const handleChange = (e: any) => {
+    const { name, value, type, checked } = e.target;
+
+    if (name === "Stock" || name === "Price" || name === "CategoryID") {
+      setForm({
+        ...form,
+        [name]: parseFloat(value),
+      });
+      return;
+    }
+
+    setForm({
+      ...form,
+      [name]: type === "checkbox" ? checked : value,
+    });
+  };
+
+  const handleImage = (e: any) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setForm({
+        ...form,
+        ImageBase64: reader.result?.toString().split(",")[1] || "",
+        ImageMimeType: file.type,
+      });
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const {
+    data: categories,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["categories-object"],
+    queryFn: async () => {
+      const res = await api.get("/api/admin/category");
+      return res.data;
+    },
+  });
+
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     setLoading(true);
 
-    try {
-      const payload = {
-        ...formData,
-        price: parseFloat(formData.price),
-        images: formData.images.split(',').map((img: any) => img.trim()).filter(Boolean),
-      };
+    const res = await fetch(
+      "/api/admin/products" +
+        (initialData ? `?id=${initialData.ProductID}` : ""),
+      {
+        method: initialData ? "PUT" : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      },
+    );
 
-      const url = isEdit ? `/api/products/${product.id}` : '/api/products';
-      const method = isEdit ? 'PUT' : 'POST';
+    setLoading(false);
 
-      const response = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
+    if (res.ok) {
+      onSuccess?.();
 
-      if (!response.ok) {
-        throw new Error('Failed to save product');
+      if (initialData) {
+        router.push(`/admin/products/detail/${initialData.ProductID}`);
       }
 
-      toast({
-        title: 'Success',
-        description: `Product ${isEdit ? 'updated' : 'created'} successfully`,
-      });
-
-      router.push('/admin/products');
-      router.refresh();
-    } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to save product',
-        variant: 'destructive',
-      });
-    } finally {
-      setLoading(false);
+      alert("Product saved successfully");
+    } else {
+      alert("Failed to save product");
     }
   };
 
-  // return (
-  //   <form onSubmit={handleSubmit} className='space-y-6'>
-  //     <div className='space-y-2'>
-  //       <Label htmlFor='name'>Product Name</Label>
-  //       <Input
-  //         id='name'
-  //         value={formData.name}
-  //         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-  //         required
-  //       />
-  //     </div>
+  return (
+    <form
+      onSubmit={handleSubmit}
+      className="max-w-2xl rounded-xl bg-white p-6 shadow-md border border-gray-200"
+    >
+      <h2 className="mb-6 text-2xl font-semibold text-gray-800">
+        {initialData ? "Edit Product" : "Add Product"}
+      </h2>
 
-  //     <div className='space-y-2'>
-  //       <Label htmlFor='description'>Description</Label>
-  //       <Textarea
-  //         id='description'
-  //         rows={4}
-  //         value={formData.description}
-  //         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-  //         required
-  //       />
-  //     </div>
+      {/* NAME */}
+      <div className="mb-4">
+        <label className="block mb-1 text-sm font-medium text-gray-800">
+          Product Name
+        </label>
+        <input
+          name="Name"
+          value={form.Name}
+          onChange={handleChange}
+          required
+          className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-amber-400 focus:ring-amber-400"
+        />
+      </div>
 
-  //     <div className='grid grid-cols-2 gap-4'>
-  //       <div className='space-y-2'>
-  //         <Label htmlFor='price'>Price (IDR)</Label>
-  //         <Input
-  //           id='price'
-  //           type='number'
-  //           step='0.01'
-  //           value={formData.price}
-  //           onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-  //           required
-  //         />
-  //       </div>
+      {/* CATEGORY */}
+      <div className="mb-4">
+        <label className="block mb-1 text-sm font-medium text-gray-800">
+          Category
+        </label>
+        <select
+          name="CategoryID" // pastikan name sesuai dengan properti di form
+          value={form.CategoryID ?? ""} // handle null/undefined
+          onChange={handleChange}
+          required
+          className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-amber-400 focus:ring-amber-400"
+        >
+          <option value="">Pilih Kategori</option>
+          {isLoading ? (
+            <option disabled>Loading...</option>
+          ) : isError ? (
+            <option disabled>Error memuat kategori</option>
+          ) : categories && Array.isArray(categories) ? (
+            categories.map((category: { CategoryID: number; Name: string }) => (
+              <option key={category.CategoryID} value={category.CategoryID}>
+                {category.Name}
+              </option>
+            ))
+          ) : (
+            <option disabled>Tidak ada kategori</option>
+          )}
+        </select>
+      </div>
 
-  //       <div className='space-y-2'>
-  //         <Label htmlFor='category'>Category</Label>
-  //         <Select
-  //           value={formData.category}
-  //           onValueChange={(value) => setFormData({ ...formData, category: value })}
-  //         >
-  //           <SelectTrigger>
-  //             <SelectValue placeholder='Select category' />
-  //           </SelectTrigger>
-  //           <SelectContent>
-  //             {categories.map((cat) => (
-  //               <SelectItem key={cat} value={cat}>
-  //                 {cat}
-  //               </SelectItem>
-  //             ))}
-  //           </SelectContent>
-  //         </Select>
-  //       </div>
-  //     </div>
+      {/* DESCRIPTION */}
+      <div className="mb-4">
+        <label className="block mb-1 text-sm font-medium text-gray-800">
+          Description
+        </label>
+        <textarea
+          name="Description"
+          value={form.Description}
+          onChange={handleChange}
+          rows={3}
+          className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-amber-400 focus:ring-amber-400"
+        />
+      </div>
 
-  //     <div className='space-y-2'>
-  //       <Label htmlFor='images'>Image URLs (comma-separated)</Label>
-  //       <Textarea
-  //         id='images'
-  //         rows={3}
-  //         value={formData.images}
-  //         onChange={(e) => setFormData({ ...formData, images: e.target.value })}
-  //         placeholder='https://example.com/image1.jpg, https://example.com/image2.jpg'
-  //       />
-  //     </div>
+      {/* PRICE & STOCK */}
+      <div className="mb-4 grid grid-cols-2 gap-4">
+        <div>
+          <label className="block mb-1 text-sm font-medium text-gray-800">
+            Price
+          </label>
+          <input
+            type="number"
+            name="Price"
+            value={form.Price}
+            onChange={handleChange}
+            required
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-amber-400 focus:ring-amber-400"
+          />
+        </div>
 
-  //     <div className='grid grid-cols-2 gap-4'>
-  //       <div className='space-y-2'>
-  //         <Label htmlFor='status'>Status</Label>
-  //         <Select
-  //           value={formData.status}
-  //           onValueChange={(value) => setFormData({ ...formData, status: value })}
-  //         >
-  //           <SelectTrigger>
-  //             <SelectValue />
-  //           </SelectTrigger>
-  //           <SelectContent>
-  //             <SelectItem value='published'>Published</SelectItem>
-  //             <SelectItem value='draft'>Draft</SelectItem>
-  //           </SelectContent>
-  //         </Select>
-  //       </div>
+        <div>
+          <label className="block mb-1 text-sm font-medium text-gray-800">
+            Stock
+          </label>
+          <input
+            type="number"
+            name="Stock"
+            value={form.Stock}
+            onChange={handleChange}
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-amber-400 focus:ring-amber-400"
+          />
+        </div>
+      </div>
 
-  //       <div className='flex items-center space-x-2 pt-8'>
-  //         <input
-  //           type='checkbox'
-  //           id='featured'
-  //           checked={formData.featured}
-  //           onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-  //           className='w-4 h-4'
-  //         />
-  //         <Label htmlFor='featured' className='cursor-pointer'>
-  //           Featured Product
-  //         </Label>
-  //       </div>
-  //     </div>
+      {/* IMAGE */}
+      <div className="mb-4">
+        <label className="block mb-1 text-sm font-medium text-gray-800">
+          Product Image
+        </label>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImage}
+          className="w-full text-sm text-gray-600"
+        />
+      </div>
 
-  //     <div className='flex gap-4'>
-  //       <Button type='submit' disabled={loading}>
-  //         {loading ? 'Saving...' : isEdit ? 'Update Product' : 'Create Product'}
-  //       </Button>
-  //       <Button
-  //         type='button'
-  //         variant='outline'
-  //         onClick={() => router.back()}
-  //         disabled={loading}
-  //       >
-  //         Cancel
-  //       </Button>
-  //     </div>
-  //   </form>
-  // );
+      {/* FEATURED */}
+      <div className="mb-6 flex items-center gap-2">
+        <input
+          type="checkbox"
+          name="IsFeatured"
+          checked={form.IsFeatured}
+          onChange={handleChange}
+          className="h-4 w-4 accent-amber-400"
+        />
+        <label className="text-sm text-gray-800">Featured Product</label>
+      </div>
+
+      {/* SUBMIT */}
+      <button
+        disabled={loading}
+        className="w-full rounded-lg bg-amber-400 py-2 font-semibold text-gray-800 hover:bg-amber-500 disabled:opacity-60"
+      >
+        {loading ? "Saving..." : "Save Product"}
+      </button>
+    </form>
+  );
 }
-*/

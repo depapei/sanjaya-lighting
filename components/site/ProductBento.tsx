@@ -1,28 +1,44 @@
-'use client';
+"use client";
 
-import { cn } from '@/lib/utils';
-import { motion } from 'framer-motion';
-import { Lamp } from 'lucide-react';
-import { BentoCard, BentoGrid } from '../magicui/bento-grid';
-import { Skeleton } from '../ui/skeleton';
+import api from "@/lib/axios";
+import { cn } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
+import { Lamp } from "lucide-react";
+import { BentoCard, BentoGrid } from "../magicui/bento-grid";
+import { Skeleton } from "../ui/skeleton";
 
 interface Product {
   id: string;
   name: string;
   slug: string;
   price: number;
-  images: string[];
+  images: string;
   category: string;
   description: string;
 }
 
-interface ProductBentoProps {
-  products: Product[];
-  isLoading?: boolean;
-  isError?: boolean;
-}
+export default function ProductBento() {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["products"],
+    queryFn: async () => {
+      const res = await api.get("/api/product");
+      return res.data;
+    },
+  });
 
-export default function ProductBento({ products, isLoading, isError }: ProductBentoProps) {
+  const products: Product[] = Array.isArray(data)
+    ? data.map((product) => ({
+        id: product.ProductID,
+        name: product.Name,
+        description: product.Description || "",
+        slug: product.ProductID,
+        price: parseInt(product.Price),
+        images: `data:image/jpeg;base64,${product.ImageBase64}`,
+        category: product.Category || "Uncategorized",
+      }))
+    : [];
+
   const spanClasses = [
     "lg:col-span-1",
     "lg:col-span-2",
@@ -38,25 +54,25 @@ export default function ProductBento({ products, isLoading, isError }: ProductBe
     />
   );
   return (
-
-    <section id='products' className=' bg-gradient-to-b from-gray-50 to-white'>
-      <div className='bg-white overflow-hidden'>
-        <div className='text-center max-w-full mx-auto'>
-          <div className='py-20 bg-white'>
-            <div className='container mx-auto px-4 sm:px-6 lg:px-8'>
+    <section id="products" className=" bg-gradient-to-b from-gray-50 to-white">
+      <div className="bg-white overflow-hidden">
+        <div className="text-center max-w-full mx-auto">
+          <div className="py-20 bg-white">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               {/* Section Header */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
-                className='text-start mb-8 flex flex-col gap-0'
+                className="text-start mb-8 flex flex-col gap-0"
               >
-                <h2 className='text-2xl font-bold text-gray-900 underline'>
+                <h2 className="text-2xl font-bold text-gray-900 underline">
                   Koleksi
                 </h2>
-                <p className='text-4xl md:text-5xl text-gray-600 max-w-5xl'>
-                  Koleksi pilihan dari produk lampu kami yang paling indah dan premium.
+                <p className="text-4xl md:text-5xl text-gray-600 max-w-5xl">
+                  Koleksi pilihan dari produk lampu kami yang paling indah dan
+                  premium.
                 </p>
               </motion.div>
 
@@ -67,7 +83,7 @@ export default function ProductBento({ products, isLoading, isError }: ProductBe
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.1 }}
               >
-                { !isLoading && (
+                {!isLoading && (
                   <BentoGrid className="grid-cols-3">
                     {products.map((product, index) => (
                       <BentoCard
@@ -83,47 +99,48 @@ export default function ProductBento({ products, isLoading, isError }: ProductBe
                         cta="View Products"
                         background={
                           <img
-                            src={product.images[0]}
+                            src={product.images}
                             className="absolute inset-0 h-full w-full object-cover"
                           />
                         }
                         className={cn(
-                          `${spanClasses[index % spanClasses.length]}`
+                          `${spanClasses[index % spanClasses.length]}`,
                         )}
                       />
                     ))}
                   </BentoGrid>
                 )}
 
-              {/* Show loading while waiting for data */}
-              {isLoading && (
-                <BentoGrid className="mt-10">
-                  {spanClasses.map((span, index) => (
-                    <BentoSkeleton key={index} className={span} />
-                  ))}
-                </BentoGrid>
-              )}
+                {/* Show loading while waiting for data */}
+                {isLoading && (
+                  <BentoGrid className="mt-10">
+                    {spanClasses.map((span, index) => (
+                      <BentoSkeleton key={index} className={span} />
+                    ))}
+                  </BentoGrid>
+                )}
 
-              {/* Show error if api call is failed */}
-              { isError && (
-                  <div id='loading' className='max-w-7xl'>
-                    <Skeleton className="h-52 w-full bg-gray-400 text-center text-white text-xl flex justify-center items-center">Error while loading the products   ...</Skeleton>
+                {/* Show error if api call is failed */}
+                {isError && (
+                  <div id="loading" className="max-w-7xl">
+                    <Skeleton className="h-52 w-full bg-gray-400 text-center text-white text-xl flex justify-center items-center">
+                      Error while loading the products ...
+                    </Skeleton>
                   </div>
-                )
-              }
+                )}
 
-              {products.length === 0 && !isLoading && (
-                <div className='text-center py-20'>
-                  <p className='text-xl text-gray-500'>No products available at the moment.</p>
-                </div>
-              )}
-
+                {products.length === 0 && !isLoading && (
+                  <div className="text-center py-20">
+                    <p className="text-xl text-gray-500">
+                      No products available at the moment.
+                    </p>
+                  </div>
+                )}
               </motion.div>
             </div>
           </div>
         </div>
       </div>
     </section>
-    
   );
 }

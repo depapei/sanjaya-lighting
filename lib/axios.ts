@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'https://public-api.wordpress.com/wp/v2/sites/www.tokolampuhiasjakarta.com',
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "",
   timeout: 10000,
 });
 

@@ -1,51 +1,74 @@
-import Link from 'next/link';
-import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from 'lucide-react';
+import {
+  Facebook,
+  Instagram,
+  Mail,
+  MapPin,
+  Phone,
+  Twitter,
+} from "lucide-react";
+import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className='bg-gray-900 text-gray-300'>
-      <div className='container mx-auto px-4 sm:px-6 lg:px-8 py-12'>
-        <div className='grid grid-cols-1 md:grid-cols-4 gap-8'>
+    <footer className="bg-gray-900 text-gray-300">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
-          <div className='col-span-1 md:col-span-2'>
-            <h3 className='text-2xl font-bold text-white mb-4'>SANJAYA LIGHTING</h3>
-            <p className='text-gray-400 mb-4 max-w-md'>
-              Premium luxury decorative lighting solutions for discerning homeowners. Transform your space with our carefully curated collection.
+          <div className="col-span-1 md:col-span-2">
+            <h3 className="text-2xl font-bold text-white mb-4">
+              SANJAYA LIGHTING
+            </h3>
+            <p className="text-gray-400 mb-4 max-w-md">
+              Premium luxury decorative lighting solutions for discerning
+              homeowners. Transform your space with our carefully curated
+              collection.
             </p>
-            <div className='flex space-x-4'>
-              <a href='#' className='hover:text-amber-400 transition-colors'>
-                <Facebook className='w-5 h-5' />
+            <div className="flex space-x-4">
+              <a href="#" className="hover:text-amber-400 transition-colors">
+                <Facebook className="w-5 h-5" />
               </a>
-              <a href='#' className='hover:text-amber-400 transition-colors'>
-                <Instagram className='w-5 h-5' />
+              <a href="#" className="hover:text-amber-400 transition-colors">
+                <Instagram className="w-5 h-5" />
               </a>
-              <a href='#' className='hover:text-amber-400 transition-colors'>
-                <Twitter className='w-5 h-5' />
+              <a href="#" className="hover:text-amber-400 transition-colors">
+                <Twitter className="w-5 h-5" />
               </a>
             </div>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className='text-white font-semibold mb-4'>Quick Links</h4>
-            <ul className='space-y-2'>
+            <h4 className="text-white font-semibold mb-4">Quick Links</h4>
+            <ul className="space-y-2">
               <li>
-                <Link href='/' className='hover:text-amber-400 transition-colors'>
+                <Link
+                  href="/"
+                  className="hover:text-amber-400 transition-colors"
+                >
                   Home
                 </Link>
               </li>
               <li>
-                <Link href='/#products' className='hover:text-amber-400 transition-colors'>
+                <Link
+                  href="/#products"
+                  className="hover:text-amber-400 transition-colors"
+                >
                   Products
                 </Link>
               </li>
               <li>
-                <Link href='/about' className='hover:text-amber-400 transition-colors'>
+                <Link
+                  href="/#about"
+                  className="hover:text-amber-400 transition-colors"
+                >
                   About Us
                 </Link>
               </li>
               <li>
-                <Link href='/contact' className='hover:text-amber-400 transition-colors'>
+                <Link
+                  href="/#contact"
+                  className="hover:text-amber-400 transition-colors"
+                >
                   Contact
                 </Link>
               </li>
@@ -54,26 +77,29 @@ export default function Footer() {
 
           {/* Contact Info */}
           <div>
-            <h4 className='text-white font-semibold mb-4'>Contact Us</h4>
-            <ul className='space-y-3'>
-              <li className='flex items-start gap-2'>
-                <MapPin className='w-5 h-5 mt-0.5 flex-shrink-0' />
+            <h4 className="text-white font-semibold mb-4">Contact Us</h4>
+            <ul className="space-y-3">
+              <li className="flex items-start gap-2">
+                <MapPin className="w-5 h-5 mt-0.5 flex-shrink-0" />
                 <span>Jakarta, Indonesia</span>
               </li>
-              <li className='flex items-center gap-2'>
-                <Phone className='w-5 h-5 flex-shrink-0' />
+              <li className="flex items-center gap-2">
+                <Phone className="w-5 h-5 flex-shrink-0" />
                 <span>+62 123 4567 890</span>
               </li>
-              <li className='flex items-center gap-2'>
-                <Mail className='w-5 h-5 flex-shrink-0' />
+              <li className="flex items-center gap-2">
+                <Mail className="w-5 h-5 flex-shrink-0" />
                 <span>info@sanjayalighting.com</span>
               </li>
             </ul>
           </div>
         </div>
 
-        <div className='border-t border-gray-800 mt-12 pt-8 text-center text-sm text-gray-400'>
-          <p>&copy; {new Date().getFullYear()} Sanjaya Lighting. All rights reserved.</p>
+        <div className="border-t border-gray-800 mt-12 pt-8 text-center text-sm text-gray-400">
+          <p>
+            &copy; {new Date().getFullYear()} Sanjaya Lighting. All rights
+            reserved.
+          </p>
         </div>
       </div>
     </footer>

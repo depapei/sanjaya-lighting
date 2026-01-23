@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Admin {
+  id            Int    @id @default(autoincrement())
+  username      String @unique @db.VarChar(255)
+  password_hash String @db.VarChar(255)
+}
+
+model Category {
+  CategoryID Int       @id @default(autoincrement())
+  Name       String    @unique @db.VarChar(255)
+  Product    Product[]
+}
+
+model Product {
+  ProductID     Int       @id @default(autoincrement())
+  Name          String    @db.VarChar(255)
+  Description   String?
+  Price         Decimal   @db.Decimal(18, 2)
+  DiscountPrice Decimal?  @db.Decimal(18, 2)
+  Stock         Int       @default(0)
+  ImageBase64   String?
+  ImageMimeType String?   @db.VarChar(50)
+  IsFeatured    Boolean   @default(false)
+  IsActive      Boolean   @default(true)
+  CategoryID    Int?
+  tags          String?   @db.VarChar(255)
+  CreatedAt     DateTime  @default(now()) @db.Timestamp(6)
+  UpdatedAt     DateTime? @db.Timestamp(6)
+  CreatedBy     String?   @db.VarChar(100)
+  UpdatedBy     String?   @db.VarChar(100)
+  Category      Category? @relation(fields: [CategoryID], references: [CategoryID], onDelete: NoAction, onUpdate: NoAction)
+}

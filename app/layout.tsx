@@ -1,9 +1,5 @@
-import { AnimatedWrapper } from "@/components/magicui/animated-wrapper";
-import Footer from "@/components/site/Footer";
-import Navbar from "@/components/site/Navbar";
 import type { Metadata } from "next";
 import "./globals.css";
-import Providers from "./provider";
 
 export const metadata: Metadata = {
   title: "TOKO SANJAYA LIGHTING - Luxury Decorative Lighting",
@@ -18,22 +14,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default function SiteLayout({ children }: { children: React.ReactNode }) {
+export default function SiteLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="id">
       <body>
-        <AnimatedWrapper
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <Navbar />
-          <main>
-            <Providers>{children}</Providers>
-          </main>
-          <Footer />
-        </AnimatedWrapper>
+        <main>{children}</main>
       </body>
     </html>
   );
