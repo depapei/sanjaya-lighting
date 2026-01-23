@@ -32,7 +32,7 @@ export default function ProductPage({ params }: ProductPageProps) {
     data: product,
     isLoading,
     isError,
-    isSuccess,
+    // isSuccess,
   } = useQuery({
     queryKey: [`product/${params.slug}`],
     queryFn: async () => {

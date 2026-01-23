@@ -1,5 +1,7 @@
 "use client";
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 interface ICategoryInterface {
   [key: string]: any;
 }

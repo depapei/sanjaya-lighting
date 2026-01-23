@@ -1,5 +1,7 @@
 "use client";
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import api from "@/lib/axios";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
