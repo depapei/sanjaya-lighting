@@ -48,9 +48,13 @@ export default function Navbar() {
   const ticking = useRef(false);
   const isOpenRef = useRef(isOpen);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const peekCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const reduceMotion = useReducedMotion();
   const pathname = usePathname();
   const isMobile = useIsMobile();
+  // Peek desktop: tampil sementara saat pointer di tengah-atas, tanpa mengubah `hidden`.
+  const [peek, setPeek] = useState(false);
+  const [canHover, setCanHover] = useState(false);
 
   isOpenRef.current = isOpen;
 
@@ -72,18 +76,36 @@ export default function Navbar() {
     fetchCategories();
   }, [fetchCategories]);
 
+  // Deteksi kemampuan hover presisi (mouse). Touchscreen / mobile tidak dapat peek.
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return;
+    const mq = window.matchMedia('(hover: hover) and (pointer: fine)');
+    const update = () => setCanHover(mq.matches);
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  }, []);
+
   // Tutup dropdown saat pindah halaman / navbar disembunyikan saat scroll
   useEffect(() => {
     setProductsOpen(false);
+    setPeek(false);
   }, [pathname]);
 
   useEffect(() => {
-    if (hidden) setProductsOpen(false);
-  }, [hidden]);
+    // Saat peek aktif, dropdown boleh tetap terbuka agar bisa diklik.
+    if (hidden && !peek) setProductsOpen(false);
+  }, [hidden, peek]);
+
+  // Peek basi wajib dibersihkan saat navbar kembali tampil via scroll / mobile / menu.
+  useEffect(() => {
+    if (!hidden || isMobile || isOpen) setPeek(false);
+  }, [hidden, isMobile, isOpen]);
 
   useEffect(() => {
     return () => {
       if (closeTimer.current) clearTimeout(closeTimer.current);
+      if (peekCloseTimer.current) clearTimeout(peekCloseTimer.current);
     };
   }, []);
 
@@ -95,6 +117,30 @@ export default function Navbar() {
   const scheduleCloseProducts = useCallback(() => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
     closeTimer.current = setTimeout(() => setProductsOpen(false), 140);
+  }, []);
+
+  const cancelPeekClose = useCallback(() => {
+    if (peekCloseTimer.current) clearTimeout(peekCloseTimer.current);
+    peekCloseTimer.current = null;
+  }, []);
+
+  const handleSentinelEnter = useCallback(() => {
+    cancelPeekClose();
+    setPeek(true);
+  }, [cancelPeekClose]);
+
+  const handleHeaderEnter = useCallback(() => {
+    // Jaga peek tetap hidup saat pointer pindah dari sentinel ke navbar.
+    if (hidden) {
+      cancelPeekClose();
+      setPeek(true);
+    }
+  }, [cancelPeekClose, hidden]);
+
+  const handleHeaderLeave = useCallback(() => {
+    // Auto-hide lagi saat mouse menjauh dari navbar.
+    if (peekCloseTimer.current) clearTimeout(peekCloseTimer.current);
+    peekCloseTimer.current = setTimeout(() => setPeek(false), 120);
   }, []);
 
   useEffect(() => {
@@ -148,15 +194,35 @@ export default function Navbar() {
     ? { duration: 0 }
     : { duration: 0.2, ease: [0.32, 0.72, 0, 1] as const };
 
+  // Behavior scroll lama dipertahankan: `hidden` hanya dari scroll.
+  // `peek` hanya override visual sementara saat hover tengah-atas (desktop).
+  const isVisuallyHidden = hidden && !peek && !reduceMotion;
+  // Sentinel tetap mounted selama `hidden` (termasuk saat peek) agar tidak
+  // remount di bawah kursor dan memicu mouseenter berulang / flicker.
+  const showPeekZone =
+    hidden && !isMobile && canHover && !isOpen && !reduceMotion;
+
   return (
-    <motion.header
-      initial={false}
-      animate={{ y: hidden && !reduceMotion ? '-110%' : '0%' }}
-      transition={{ duration: reduceMotion ? 0 : 0.32, ease: [0.32, 0.72, 0, 1] }}
-      className={`fixed left-0 right-0 top-0 z-50 flex w-full max-w-[100vw] justify-center px-0 pt-0 md:px-4 md:pt-3 ${
-        hidden ? 'pointer-events-none' : ''
-      }`}
-    >
+    <>
+      {/* Zona hover tak terlihat seukuran pill — desktop only, aktif saat navbar hidden */}
+      {showPeekZone && (
+        <div
+          aria-hidden="true"
+          onMouseEnter={handleSentinelEnter}
+          onMouseLeave={handleHeaderLeave}
+          className="fixed left-1/2 top-0 z-40 h-[88px] w-[min(620px,60vw)] -translate-x-1/2"
+        />
+      )}
+      <motion.header
+        initial={false}
+        animate={{ y: isVisuallyHidden ? '-110%' : '0%' }}
+        transition={{ duration: reduceMotion ? 0 : 0.32, ease: [0.32, 0.72, 0, 1] }}
+        onMouseEnter={handleHeaderEnter}
+        onMouseLeave={handleHeaderLeave}
+        className={`fixed left-0 right-0 top-0 z-50 flex w-full max-w-[100vw] justify-center px-0 pt-0 md:px-4 md:pt-3 ${
+          isVisuallyHidden ? 'pointer-events-none' : ''
+        }`}
+      >
       {/* Main low-profile bar — pill putih di atas, invert ke hitam saat terscroll */}
       <motion.nav
         initial={false}
@@ -519,6 +585,7 @@ export default function Navbar() {
           )}
         </AnimatePresence>
       </motion.nav>
-    </motion.header>
+      </motion.header>
+    </>
   );
 }
