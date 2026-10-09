@@ -83,7 +83,8 @@ export type AdminScalarFieldEnum = (typeof AdminScalarFieldEnum)[keyof typeof Ad
 
 export const CategoryScalarFieldEnum = {
   CategoryID: 'CategoryID',
-  Name: 'Name'
+  Name: 'Name',
+  IsActive: 'IsActive'
 } as const
 
 export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typeof CategoryScalarFieldEnum]

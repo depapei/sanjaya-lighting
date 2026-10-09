@@ -37,16 +37,19 @@ export type CategorySumAggregateOutputType = {
 export type CategoryMinAggregateOutputType = {
   CategoryID: number | null
   Name: string | null
+  IsActive: boolean | null
 }
 
 export type CategoryMaxAggregateOutputType = {
   CategoryID: number | null
   Name: string | null
+  IsActive: boolean | null
 }
 
 export type CategoryCountAggregateOutputType = {
   CategoryID: number
   Name: number
+  IsActive: number
   _all: number
 }
 
@@ -62,16 +65,19 @@ export type CategorySumAggregateInputType = {
 export type CategoryMinAggregateInputType = {
   CategoryID?: true
   Name?: true
+  IsActive?: true
 }
 
 export type CategoryMaxAggregateInputType = {
   CategoryID?: true
   Name?: true
+  IsActive?: true
 }
 
 export type CategoryCountAggregateInputType = {
   CategoryID?: true
   Name?: true
+  IsActive?: true
   _all?: true
 }
 
@@ -164,6 +170,7 @@ export type CategoryGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
 export type CategoryGroupByOutputType = {
   CategoryID: number
   Name: string
+  IsActive: boolean
   _count: CategoryCountAggregateOutputType | null
   _avg: CategoryAvgAggregateOutputType | null
   _sum: CategorySumAggregateOutputType | null
@@ -192,12 +199,14 @@ export type CategoryWhereInput = {
   NOT?: Prisma.CategoryWhereInput | Prisma.CategoryWhereInput[]
   CategoryID?: Prisma.IntFilter<"Category"> | number
   Name?: Prisma.StringFilter<"Category"> | string
+  IsActive?: Prisma.BoolFilter<"Category"> | boolean
   Product?: Prisma.ProductListRelationFilter
 }
 
 export type CategoryOrderByWithRelationInput = {
   CategoryID?: Prisma.SortOrder
   Name?: Prisma.SortOrder
+  IsActive?: Prisma.SortOrder
   Product?: Prisma.ProductOrderByRelationAggregateInput
 }
 
@@ -207,12 +216,14 @@ export type CategoryWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.CategoryWhereInput | Prisma.CategoryWhereInput[]
   OR?: Prisma.CategoryWhereInput[]
   NOT?: Prisma.CategoryWhereInput | Prisma.CategoryWhereInput[]
+  IsActive?: Prisma.BoolFilter<"Category"> | boolean
   Product?: Prisma.ProductListRelationFilter
 }, "CategoryID" | "Name">
 
 export type CategoryOrderByWithAggregationInput = {
   CategoryID?: Prisma.SortOrder
   Name?: Prisma.SortOrder
+  IsActive?: Prisma.SortOrder
   _count?: Prisma.CategoryCountOrderByAggregateInput
   _avg?: Prisma.CategoryAvgOrderByAggregateInput
   _max?: Prisma.CategoryMaxOrderByAggregateInput
@@ -226,47 +237,56 @@ export type CategoryScalarWhereWithAggregatesInput = {
   NOT?: Prisma.CategoryScalarWhereWithAggregatesInput | Prisma.CategoryScalarWhereWithAggregatesInput[]
   CategoryID?: Prisma.IntWithAggregatesFilter<"Category"> | number
   Name?: Prisma.StringWithAggregatesFilter<"Category"> | string
+  IsActive?: Prisma.BoolWithAggregatesFilter<"Category"> | boolean
 }
 
 export type CategoryCreateInput = {
   Name: string
+  IsActive?: boolean
   Product?: Prisma.ProductCreateNestedManyWithoutCategoryInput
 }
 
 export type CategoryUncheckedCreateInput = {
   CategoryID?: number
   Name: string
+  IsActive?: boolean
   Product?: Prisma.ProductUncheckedCreateNestedManyWithoutCategoryInput
 }
 
 export type CategoryUpdateInput = {
   Name?: Prisma.StringFieldUpdateOperationsInput | string
+  IsActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Product?: Prisma.ProductUpdateManyWithoutCategoryNestedInput
 }
 
 export type CategoryUncheckedUpdateInput = {
   CategoryID?: Prisma.IntFieldUpdateOperationsInput | number
   Name?: Prisma.StringFieldUpdateOperationsInput | string
+  IsActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Product?: Prisma.ProductUncheckedUpdateManyWithoutCategoryNestedInput
 }
 
 export type CategoryCreateManyInput = {
   CategoryID?: number
   Name: string
+  IsActive?: boolean
 }
 
 export type CategoryUpdateManyMutationInput = {
   Name?: Prisma.StringFieldUpdateOperationsInput | string
+  IsActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type CategoryUncheckedUpdateManyInput = {
   CategoryID?: Prisma.IntFieldUpdateOperationsInput | number
   Name?: Prisma.StringFieldUpdateOperationsInput | string
+  IsActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type CategoryCountOrderByAggregateInput = {
   CategoryID?: Prisma.SortOrder
   Name?: Prisma.SortOrder
+  IsActive?: Prisma.SortOrder
 }
 
 export type CategoryAvgOrderByAggregateInput = {
@@ -276,11 +296,13 @@ export type CategoryAvgOrderByAggregateInput = {
 export type CategoryMaxOrderByAggregateInput = {
   CategoryID?: Prisma.SortOrder
   Name?: Prisma.SortOrder
+  IsActive?: Prisma.SortOrder
 }
 
 export type CategoryMinOrderByAggregateInput = {
   CategoryID?: Prisma.SortOrder
   Name?: Prisma.SortOrder
+  IsActive?: Prisma.SortOrder
 }
 
 export type CategorySumOrderByAggregateInput = {
@@ -290,6 +312,10 @@ export type CategorySumOrderByAggregateInput = {
 export type CategoryNullableScalarRelationFilter = {
   is?: Prisma.CategoryWhereInput | null
   isNot?: Prisma.CategoryWhereInput | null
+}
+
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
 }
 
 export type CategoryCreateNestedOneWithoutProductInput = {
@@ -310,11 +336,13 @@ export type CategoryUpdateOneWithoutProductNestedInput = {
 
 export type CategoryCreateWithoutProductInput = {
   Name: string
+  IsActive?: boolean
 }
 
 export type CategoryUncheckedCreateWithoutProductInput = {
   CategoryID?: number
   Name: string
+  IsActive?: boolean
 }
 
 export type CategoryCreateOrConnectWithoutProductInput = {
@@ -335,11 +363,13 @@ export type CategoryUpdateToOneWithWhereWithoutProductInput = {
 
 export type CategoryUpdateWithoutProductInput = {
   Name?: Prisma.StringFieldUpdateOperationsInput | string
+  IsActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type CategoryUncheckedUpdateWithoutProductInput = {
   CategoryID?: Prisma.IntFieldUpdateOperationsInput | number
   Name?: Prisma.StringFieldUpdateOperationsInput | string
+  IsActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 
@@ -376,6 +406,7 @@ export type CategoryCountOutputTypeCountProductArgs<ExtArgs extends runtime.Type
 export type CategorySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   CategoryID?: boolean
   Name?: boolean
+  IsActive?: boolean
   Product?: boolean | Prisma.Category$ProductArgs<ExtArgs>
   _count?: boolean | Prisma.CategoryCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["category"]>
@@ -383,19 +414,22 @@ export type CategorySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
 export type CategorySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   CategoryID?: boolean
   Name?: boolean
+  IsActive?: boolean
 }, ExtArgs["result"]["category"]>
 
 export type CategorySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   CategoryID?: boolean
   Name?: boolean
+  IsActive?: boolean
 }, ExtArgs["result"]["category"]>
 
 export type CategorySelectScalar = {
   CategoryID?: boolean
   Name?: boolean
+  IsActive?: boolean
 }
 
-export type CategoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"CategoryID" | "Name", ExtArgs["result"]["category"]>
+export type CategoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"CategoryID" | "Name" | "IsActive", ExtArgs["result"]["category"]>
 export type CategoryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   Product?: boolean | Prisma.Category$ProductArgs<ExtArgs>
   _count?: boolean | Prisma.CategoryCountOutputTypeDefaultArgs<ExtArgs>
@@ -411,6 +445,7 @@ export type $CategoryPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     CategoryID: number
     Name: string
+    IsActive: boolean
   }, ExtArgs["result"]["category"]>
   composites: {}
 }
@@ -837,6 +872,7 @@ export interface Prisma__CategoryClient<T, Null = never, ExtArgs extends runtime
 export interface CategoryFieldRefs {
   readonly CategoryID: Prisma.FieldRef<"Category", 'Int'>
   readonly Name: Prisma.FieldRef<"Category", 'String'>
+  readonly IsActive: Prisma.FieldRef<"Category", 'Boolean'>
 }
     
 

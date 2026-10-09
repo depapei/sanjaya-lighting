@@ -16,6 +16,7 @@ model Admin {
 model Category {
   CategoryID Int       @id @default(autoincrement())
   Name       String    @unique @db.VarChar(255)
+  IsActive   Boolean   @default(true)
   Product    Product[]
 }
 

@@ -678,10 +678,6 @@ export type NullableDecimalFieldUpdateOperationsInput = {
   divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
 }

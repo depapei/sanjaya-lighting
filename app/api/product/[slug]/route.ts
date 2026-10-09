@@ -25,7 +25,7 @@ export async function GET(
         ImageBase64: true,
         ImageMimeType: true,
         IsFeatured: true,
-        Category: { select: { Name: true } },
+        Category: { select: { Name: true, IsActive: true } },
       },
     });
 
@@ -33,7 +33,10 @@ export async function GET(
       const encryptedId_product = {
         ...product,
         ProductID: paramsId,
-        Category: product.Category?.Name ?? null,
+        Category:
+          product.Category && product.Category.IsActive
+            ? product.Category.Name
+            : null,
       };
       return NextResponse.json(encryptedId_product);
     } else {

@@ -24,7 +24,9 @@ type AdminProduct = {
   tags?: string | null;
 };
 
-type Category = { CategoryID: number; Name: string };
+type Category = { CategoryID: number; Name: string; IsActive?: boolean };
+
+type CreatedCategory = Category & { reactivated?: boolean };
 
 type ProductFormProps = {
   initialData?: AdminProduct;
@@ -153,13 +155,17 @@ export default function ProductForm({ initialData }: ProductFormProps) {
   const createCategoryMutation = useMutation({
     mutationFn: async (name: string) => {
       const res = await api.post("/api/admin/category", { Name: name });
-      return res.data as Category;
+      return res.data as CreatedCategory;
     },
     onSuccess: (created) => {
       queryClient.setQueryData<Category[]>(queryKeys.categories, (old) => {
         const list = Array.isArray(old) ? old : [];
         if (list.some((c) => c.CategoryID === created.CategoryID))
-          return list;
+          return list.map((c) =>
+            c.CategoryID === created.CategoryID
+              ? { ...c, Name: created.Name, IsActive: true }
+              : c,
+          );
         return [...list, created].sort((a, b) =>
           a.Name.localeCompare(b.Name),
         );
@@ -172,7 +178,11 @@ export default function ProductForm({ initialData }: ProductFormProps) {
       setCatOpen(false);
       setCatName("");
       setCatError("");
-      toast.success(`Kategori "${created.Name}" ditambahkan & dipilih.`);
+      toast.success(
+        created.reactivated
+          ? `Kategori "${created.Name}" diaktifkan kembali & dipilih.`
+          : `Kategori "${created.Name}" ditambahkan & dipilih.`,
+      );
     },
     onError: (err: unknown) => {
       const status =
@@ -211,7 +221,8 @@ export default function ProductForm({ initialData }: ProductFormProps) {
     createCategoryMutation.mutate(name);
   };
 
-  const saveMutation = useMutation({    mutationFn: async () => {
+  const saveMutation = useMutation({
+    mutationFn: async () => {
       const payload = {
         Name: form.Name.trim(),
         Description: form.Description.trim() === "" ? null : form.Description.trim(),

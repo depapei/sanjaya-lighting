@@ -22,6 +22,7 @@ export async function GET(req: NextRequest) {
 
     if (categoryParam) {
       const categories = await prisma.category.findMany({
+        where: { IsActive: true },
         select: { CategoryID: true, Name: true },
       });
 
@@ -64,7 +65,7 @@ export async function GET(req: NextRequest) {
         Stock: true,
         ImageBase64: true,
         Category: {
-          select: { Name: true },
+          select: { Name: true, IsActive: true },
         },
       },
     });
@@ -72,7 +73,10 @@ export async function GET(req: NextRequest) {
     const modifiedProduct = products.map((product) => ({
       ...product,
       ProductID: obfuscateId(product.ProductID),
-      Category: product.Category?.Name,
+      Category:
+        product.Category && product.Category.IsActive
+          ? product.Category.Name
+          : null,
     }));
 
     return NextResponse.json(modifiedProduct);

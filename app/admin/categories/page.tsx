@@ -22,6 +22,10 @@ const CategoriesPage = () => {
       // Produk memakai nama kategori → ikut invalidate.
       queryClient.invalidateQueries({ queryKey: queryKeys.categories });
       queryClient.invalidateQueries({ queryKey: queryKeys.products });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.productCategories,
+      });
+      toast.success("Kategori dinonaktifkan.");
     },
     onError: (error) => {
       console.error("Delete failed:", error);
@@ -59,7 +63,11 @@ const CategoriesPage = () => {
         route.push(`categories/detail/${id}`);
       }}
       onDelete={(id) => {
-        if (confirm("Apakah anda yakin ingin hapus kategori ini?")) {
+        if (
+          confirm(
+            "Nonaktifkan kategori ini? Produk di dalamnya tetap ada dan tampil sebagai Tanpa kategori di toko.",
+          )
+        ) {
           deleteMutation.mutate(id);
         }
       }}

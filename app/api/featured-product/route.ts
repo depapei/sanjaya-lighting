@@ -19,7 +19,7 @@ export async function GET() {
         Stock: true,
         ImageBase64: true,
         Category: {
-          select: { Name: true },
+          select: { Name: true, IsActive: true },
         },
       },
     });
@@ -27,7 +27,10 @@ export async function GET() {
     const encryptedProducts = products.map((product) => ({
       ...product,
       ProductID: obfuscateId(product.ProductID),
-      Category: product.Category?.Name,
+      Category:
+        product.Category && product.Category.IsActive
+          ? product.Category.Name
+          : null,
     }));
 
     return NextResponse.json(encryptedProducts);

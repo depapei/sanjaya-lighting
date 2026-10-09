@@ -35,6 +35,27 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Nama yang pernah di-soft-delete: aktifkan kembali, bukan duplikat.
+    const existing = await prisma.category.findUnique({
+      where: { Name: trimmed },
+    });
+    if (existing) {
+      if (!existing.IsActive) {
+        const reactivated = await prisma.category.update({
+          where: { CategoryID: existing.CategoryID },
+          data: { IsActive: true },
+        });
+        return NextResponse.json(
+          { ...reactivated, reactivated: true },
+          { status: 200 },
+        );
+      }
+      return NextResponse.json(
+        { message: "Category name already exists" },
+        { status: 409 },
+      );
+    }
+
     const category = await prisma.category.create({
       data: {
         Name: trimmed,
@@ -63,6 +84,7 @@ export async function POST(req: NextRequest) {
 export async function GET() {
   try {
     const categories = await prisma.category.findMany({
+      where: { IsActive: true },
       orderBy: { Name: "desc" },
     });
 
@@ -100,15 +122,35 @@ export async function PUT(req: NextRequest) {
 
     const body = await req.json();
 
+    const data: { Name?: string; IsActive?: boolean } = {};
+    if (body.Name !== undefined) {
+      const trimmed = String(body.Name).trim();
+      if (trimmed === "") {
+        return NextResponse.json(
+          { message: "Category name cannot be empty" },
+          { status: 400 },
+        );
+      }
+      data.Name = trimmed;
+    }
+    if (body.IsActive !== undefined) data.IsActive = Boolean(body.IsActive);
+
     const category = await prisma.category.update({
       where: { CategoryID: id },
-      data: {
-        ...body,
-      },
+      data,
     });
 
     return NextResponse.json(category);
   } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002"
+    ) {
+      return NextResponse.json(
+        { message: "Category name already exists" },
+        { status: 409 },
+      );
+    }
     console.error(error);
     return NextResponse.json(
       { message: "Failed to update category" },
@@ -118,8 +160,9 @@ export async function PUT(req: NextRequest) {
 }
 
 /**
- * DELETE /api/category?id=1
- * Soft delete category
+ * DELETE /api/admin/category?id=1
+ * Soft delete category (IsActive = false).
+ * Produk di dalamnya tetap ada & tampil sebagai "Tanpa kategori" di depan.
  */
 export async function DELETE(req: NextRequest) {
   try {
@@ -139,8 +182,9 @@ export async function DELETE(req: NextRequest) {
       );
     }
 
-    const category = await prisma.category.delete({
+    const category = await prisma.category.update({
       where: { CategoryID: id },
+      data: { IsActive: false },
     });
 
     return NextResponse.json(category);
