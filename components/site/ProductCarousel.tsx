@@ -114,8 +114,8 @@ function CarouselStates({
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
+        <CarouselPrevious className="left-2" />
+        <CarouselNext className="right-2" />
       </Carousel>
     );
   }
@@ -153,7 +153,7 @@ export default function FeaturedProductCarousel(props: { title?: string }) {
   const products = mapProducts(data);
 
   return (
-    <section id="products" className="border-b border-[#E5E7EB] bg-white">
+    <section id="products" className="overflow-x-clip border-b border-[#E5E7EB] bg-white">
       <div className="mx-auto max-w-7xl px-4 py-[80px] sm:px-6 lg:px-8">
         <SectionHeader
           title={props.title ? props.title : "Produk Unggulan Kami"}
@@ -181,8 +181,8 @@ export default function FeaturedProductCarousel(props: { title?: string }) {
                     </CarouselItem>
                   ))}
                 </CarouselContent>
-                <CarouselPrevious />
-                <CarouselNext />
+                <CarouselPrevious className="left-2" />
+                <CarouselNext className="right-2" />
               </Carousel>
             )}
           />
@@ -204,7 +204,7 @@ export const ProductCarousel = (props: { title?: string }) => {
   const products = mapProducts(data);
 
   return (
-    <section id="products-carousel" className="bg-white">
+    <section id="products-carousel" className="overflow-x-clip bg-white">
       <div className="mx-auto max-w-7xl px-4 py-[80px] sm:px-6 lg:px-8">
         <SectionHeader
           title={props.title ? props.title : "Produk Unggulan Kami"}
@@ -232,8 +232,8 @@ export const ProductCarousel = (props: { title?: string }) => {
                     </CarouselItem>
                   ))}
                 </CarouselContent>
-                <CarouselPrevious />
-                <CarouselNext />
+                <CarouselPrevious className="left-2" />
+                <CarouselNext className="right-2" />
               </Carousel>
             )}
           />
