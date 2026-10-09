@@ -1,5 +1,6 @@
 'use client';
 
+import { useIsMobile } from "@/hooks/use-mobile";
 import { slugify, type ProductCategory } from '@/lib/slug';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { ChevronDown, Menu, X } from 'lucide-react';
@@ -49,6 +50,7 @@ export default function Navbar() {
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const reduceMotion = useReducedMotion();
   const pathname = usePathname();
+  const isMobile = useIsMobile();
 
   isOpenRef.current = isOpen;
 
@@ -151,7 +153,7 @@ export default function Navbar() {
       initial={false}
       animate={{ y: hidden && !reduceMotion ? '-110%' : '0%' }}
       transition={{ duration: reduceMotion ? 0 : 0.32, ease: [0.32, 0.72, 0, 1] }}
-      className={`fixed flex justify-center inset-x-0 top-0 z-50 px-4 pt-3 sm:px-6 ${
+      className={`fixed left-0 right-0 top-0 z-50 flex w-full max-w-[100vw] justify-center px-0 pt-0 md:px-4 md:pt-3 ${
         hidden ? 'pointer-events-none' : ''
       }`}
     >
@@ -163,29 +165,30 @@ export default function Navbar() {
           borderColor: scrolled ? 'rgba(255, 255, 255, 0.2)' : 'rgb(229, 231, 235)',
           // Fix rounded bug: pill saat tertutup, kartu rounded saat menu mobile terbuka
           // agar dropdown tidak merusak bentuk pill
-          borderRadius: 4,
+          borderRadius: isOpen ? '12px' : isMobile ? '12px' : '9999px',
           backdropFilter: 'blur(12px)',
         }}
         transition={{ duration: reduceMotion ? 0 : 0.35, ease: 'easeOut' }}
         style={{ WebkitBackdropFilter: scrolled ? 'blur(0px)' : 'blur(12px)' }}
         // overflow-visible saat dropdown desktop terbuka agar panel tidak terpotong;
         // selebihnya overflow-hidden agar menu mobile tetap terjepit rapi dalam pill.
-        className={`w-fit ${
+        // w-full di mobile (full-bleed), auto di desktop (pill centered).
+        className={`${isMobile && 'mx-md mt-4'} w-full max-w-full min-w-0 md:w-auto ${
           productsOpen && !isOpen ? 'overflow-visible' : 'overflow-hidden'
         }`}
       >
-        <div className="px-4 sm:px-6">
-          <div className="flex h-12 items-center justify-center gap-6 md:gap-8 lg:gap-12">
-            <Link href="/" className="flex flex-col leading-none">
+        <div className="min-w-0 px-4 sm:px-6">
+          <div className="flex h-12 min-w-0 items-center justify-between gap-4 md:justify-start md:gap-8 lg:gap-12">
+            <Link href="/" className="flex min-w-0 shrink flex-col leading-none">
               <span
-                className={`text-sm font-bold tracking-tight transition-colors duration-300 ${
+                className={`truncate text-sm font-bold tracking-tight transition-colors duration-300 ${
                   scrolled ? 'text-white' : 'text-black'
                 }`}
               >
                 SANJAYA LIGHTING
               </span>
               <span
-                className={`text-xs font-normal transition-colors duration-300 ${
+                className={`truncate text-xs font-normal transition-colors duration-300 ${
                   scrolled ? 'text-white/60' : 'text-[#6B6B6B]'
                 }`}
               >
@@ -371,7 +374,7 @@ export default function Navbar() {
               onClick={() => setIsOpen(!isOpen)}
               aria-label="Toggle menu"
               aria-expanded={isOpen}
-              className={`p-2 transition-colors duration-300 md:hidden ${
+              className={`shrink-0 p-2 transition-colors duration-300 md:hidden ${
                 isOpen
                   ? scrolled
                     ? 'rounded-[10px] border border-white/20 text-white hover:border-white'

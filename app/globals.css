@@ -12,6 +12,15 @@ html {
   scroll-behavior: smooth;
 }
 
+html,
+body {
+  /* Safety net: satu komponen bocor (mis. elemen absolute di luar
+     viewport) tidak boleh membuat satu halaman bisa di-scroll horizontal.
+     Pakai clip (bukan hidden) agar position: sticky tetap berfungsi. */
+  overflow-x: clip;
+  max-width: 100%;
+}
+
 
 
 @layer base {
