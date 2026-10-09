@@ -1,7 +1,7 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowUpRight, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -19,7 +19,7 @@ export default function Navbar() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
       {/* Top utility bar — Luceplan spec: solid black, white text */}
-      <div className="bg-black text-white">
+      {/* <div className="bg-black text-white">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
           <p className="truncate text-xs font-normal leading-tight text-white/70">
             Toko Lampu Hias Jakarta — Jl. Raya Pos Pengumben No. 5
@@ -32,10 +32,10 @@ export default function Navbar() {
             <ArrowUpRight className="h-4 w-4" />
           </Link>
         </div>
-      </div>
+      </div> */}
 
       {/* Main low-profile bar — white, thin rule, text-first links */}
-      <nav className="border-b border-[#E5E7EB] bg-white">
+      <nav className="border-b border-[#E5E7EB] bg-white/80 backdrop-blur-sm rounded-full mx-lg mt-sm">
         <div className="mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <Link href="/" className="flex flex-col leading-none">
