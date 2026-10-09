@@ -151,7 +151,7 @@ export default function Navbar() {
       initial={false}
       animate={{ y: hidden && !reduceMotion ? '-110%' : '0%' }}
       transition={{ duration: reduceMotion ? 0 : 0.32, ease: [0.32, 0.72, 0, 1] }}
-      className={`fixed inset-x-0 top-0 z-50 px-4 pt-3 sm:px-6 ${
+      className={`fixed flex justify-center inset-x-0 top-0 z-50 px-4 pt-3 sm:px-6 ${
         hidden ? 'pointer-events-none' : ''
       }`}
     >
@@ -170,22 +170,22 @@ export default function Navbar() {
         style={{ WebkitBackdropFilter: scrolled ? 'blur(0px)' : 'blur(12px)' }}
         // overflow-visible saat dropdown desktop terbuka agar panel tidak terpotong;
         // selebihnya overflow-hidden agar menu mobile tetap terjepit rapi dalam pill.
-        className={`relative mx-auto max-w-7xl border ${
+        className={`w-fit ${
           productsOpen && !isOpen ? 'overflow-visible' : 'overflow-hidden'
         }`}
       >
         <div className="px-4 sm:px-6">
-          <div className="flex h-12 items-center justify-between">
+          <div className="flex h-12 items-center justify-center gap-6 md:gap-8 lg:gap-12">
             <Link href="/" className="flex flex-col leading-none">
               <span
-                className={`text-md font-bold tracking-tight transition-colors duration-300 ${
+                className={`text-sm font-bold tracking-tight transition-colors duration-300 ${
                   scrolled ? 'text-white' : 'text-black'
                 }`}
               >
                 SANJAYA LIGHTING
               </span>
               <span
-                className={`mt-1 text-xs font-normal transition-colors duration-300 ${
+                className={`text-xs font-normal transition-colors duration-300 ${
                   scrolled ? 'text-white/60' : 'text-[#6B6B6B]'
                 }`}
               >
