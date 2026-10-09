@@ -40,7 +40,7 @@ const BentoCard = ({
     key={name}
     className={cn(
       "group relative col-span-3 flex flex-col justify-end overflow-hidden",
-      "rounded-md border border-[#E5E7EB] bg-[#F6F6F6]",
+      "border border-[#E5E7EB] bg-[#F6F6F6]",
       className,
     )}
   >
@@ -64,7 +64,7 @@ const BentoCard = ({
     </div>
 
     {/* Quiet hover: thin black outline instead of blur/glow */}
-    <div className="pointer-events-none absolute inset-0 rounded-md border border-transparent transition-colors duration-200 group-hover:border-black" />
+    <div className="pointer-events-none absolute inset-0 border border-transparent transition-colors duration-200 group-hover:border-black" />
   </div>
 );
 
