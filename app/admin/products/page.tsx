@@ -1,5 +1,4 @@
 "use client";
-import Loading from "@/components/admin/Loading";
 import ProductTable from "@/components/admin/ProductTable";
 import api from "@/lib/axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -37,12 +36,9 @@ const ProductsPage = () => {
     return;
   }
 
-  if (isLoading) {
-    return <Loading />;
-  }
-
   return (
     <ProductTable
+      isLoading={isLoading}
       data={data}
       onEdit={(id) => {
         route.push(`products/edit/${id}`);

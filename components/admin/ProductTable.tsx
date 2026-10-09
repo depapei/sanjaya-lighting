@@ -1,5 +1,7 @@
 "use client";
 
+import Loading from "./Loading";
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 interface IProductInterface {
@@ -11,6 +13,7 @@ type ProductTableProps = {
   onEdit: (product: IProductInterface) => void;
   onClick: (id: number) => void;
   onDelete: (id: number) => void;
+  isLoading: boolean;
 };
 
 export default function ProductTable({
@@ -18,6 +21,7 @@ export default function ProductTable({
   onEdit,
   onDelete,
   onClick,
+  isLoading,
 }: ProductTableProps) {
   return (
     <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm">
@@ -35,6 +39,8 @@ export default function ProductTable({
         </thead>
 
         <tbody>
+          {isLoading && <Loading />}
+
           {data.length === 0 && (
             <tr>
               <td colSpan={7} className="px-4 py-6 text-center text-gray-500">
@@ -54,16 +60,6 @@ export default function ProductTable({
               {/* PRODUCT INFO */}
               <td className="px-4 py-3">
                 <div className="flex items-center gap-3">
-                  {item.ImageBase64 ? (
-                    <img
-                      src={`data:${item.ImageMimeType};base64,${item.ImageBase64}`}
-                      alt={item.Name}
-                      className="h-10 w-10 rounded-md object-cover border"
-                    />
-                  ) : (
-                    <div className="h-10 w-10 rounded-md bg-gray-200" />
-                  )}
-
                   <div>
                     <p className="font-medium text-gray-800">{item.Name}</p>
                     <p className="text-xs text-gray-500 line-clamp-1 whitespace-pre-line">
