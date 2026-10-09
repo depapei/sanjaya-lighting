@@ -21,6 +21,13 @@ export const queryKeys = {
   categories: ["categories"] as const,
   categoryDetail: (id: string | number) => ["categories", String(id)] as const,
 
+  // Public kategori untuk dropdown Navbar & filter /products
+  // (endpoint /api/product-category, shape {id,name,slug,productCount}).
+  // Dipisah dari ["categories"] milik admin agar cache tidak tertukar.
+  productCategories: ["product-categories"] as const,
+  productsByCategory: (slug: string) =>
+    ["products", "category", slug] as const,
+
   // Public product detail — disamakan dengan admin agar satu invalidate cukup.
   // Kalau nanti endpoint public/admin divergen, pisahkan lagi di sini saja.
   publicProductDetail: (slug: string | number) =>

@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import "../globals.css";
 import Providers from "../provider";
 
-export default function adminLayout({
+export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
