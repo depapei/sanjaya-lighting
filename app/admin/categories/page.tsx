@@ -2,6 +2,7 @@
 import CategoryTable from "@/components/admin/CategoryTable";
 import Loading from "@/components/admin/Loading";
 import api from "@/lib/axios";
+import { queryKeys } from "@/lib/queryKeys";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
@@ -16,8 +17,10 @@ const CategoriesPage = () => {
       return res.data;
     },
     onSuccess: () => {
-      // 🔁 Invalidate cache → refresh daftar produk
-      queryClient.invalidateQueries({ queryKey: ["category"] });
+      // Prefix ["categories"] mencakup ["categories", id].
+      // Produk memakai nama kategori → ikut invalidate.
+      queryClient.invalidateQueries({ queryKey: queryKeys.categories });
+      queryClient.invalidateQueries({ queryKey: queryKeys.products });
     },
     onError: (error) => {
       console.error("Delete failed:", error);
@@ -26,19 +29,23 @@ const CategoriesPage = () => {
   });
 
   const { data, isLoading } = useQuery({
-    queryKey: ["category"],
+    queryKey: queryKeys.categories,
     queryFn: async () => {
       const res = await api.get("/api/admin/category");
       return res.data;
     },
   });
 
-  if (!data) {
-    return;
-  }
-
   if (isLoading) {
     return <Loading />;
+  }
+
+  if (!data) {
+    return (
+      <div className="p-3 bg-red-100 text-red-600">
+        Failed to fetch categories
+      </div>
+    );
   }
 
   return (

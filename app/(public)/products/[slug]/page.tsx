@@ -1,6 +1,7 @@
 "use client";
 import ProductCarousel from "@/components/site/ProductCarousel";
 import api from "@/lib/axios";
+import { queryKeys } from "@/lib/queryKeys";
 
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
@@ -24,7 +25,7 @@ export default function ProductPage({ params }: ProductPageProps) {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: [`product/${params.slug}`],
+    queryKey: queryKeys.publicProductDetail(params.slug),
     queryFn: async () => {
       const res = await api.get(`/api/product/${params.slug}`);
       return res.data;

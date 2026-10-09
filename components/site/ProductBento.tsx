@@ -1,6 +1,7 @@
 "use client";
 
 import api from "@/lib/axios";
+import { queryKeys } from "@/lib/queryKeys";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
@@ -18,7 +19,7 @@ interface Product {
 
 export default function ProductBento() {
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["products"],
+    queryKey: queryKeys.products,
     queryFn: async () => {
       const res = await api.get("/api/product");
       return res.data;

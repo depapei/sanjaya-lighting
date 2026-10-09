@@ -1,6 +1,7 @@
 "use client";
 import ProductForm from "@/components/admin/ProductForm";
 import api from "@/lib/axios";
+import { queryKeys } from "@/lib/queryKeys";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
@@ -10,7 +11,7 @@ const EditProduct = () => {
   const id = params.slug;
 
   const { data, isLoading } = useQuery({
-    queryKey: [`product/${id}`],
+    queryKey: queryKeys.productDetail(String(id)),
     queryFn: async () => {
       const res = await api.get(`/api/admin/product/${id}`);
       return res.data;

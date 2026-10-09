@@ -3,7 +3,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import api from "@/lib/axios";
-import { useQuery } from "@tanstack/react-query";
+import { queryKeys } from "@/lib/queryKeys";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -30,6 +31,7 @@ export default function ProductForm({
   });
 
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const handleChange = (e: any) => {
     const { name, value, type, checked } = e.target;
@@ -68,10 +70,38 @@ export default function ProductForm({
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["categories-object"],
+    queryKey: queryKeys.categories,
     queryFn: async () => {
       const res = await api.get("/api/admin/category");
       return res.data;
+    },
+  });
+
+  const saveMutation = useMutation({
+    mutationFn: async () => {
+      const res = await fetch(
+        "/api/admin/products" +
+          (initialData ? `?id=${initialData.ProductID}` : ""),
+        {
+          method: initialData ? "PUT" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(form),
+        },
+      );
+      if (!res.ok) throw new Error("Failed to save product");
+      return res.json().catch(() => ({}));
+    },
+    onSuccess: () => {
+      // List + detail + storefront ikut fresh (prefix match).
+      queryClient.invalidateQueries({ queryKey: queryKeys.products });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.featuredProducts,
+      });
+      if (initialData?.ProductID) {
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.productDetail(initialData.ProductID),
+        });
+      }
     },
   });
 
@@ -79,28 +109,22 @@ export default function ProductForm({
     e.preventDefault();
     setLoading(true);
 
-    const res = await fetch(
-      "/api/admin/products" +
-        (initialData ? `?id=${initialData.ProductID}` : ""),
-      {
-        method: initialData ? "PUT" : "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      },
-    );
-
-    setLoading(false);
-
-    if (res.ok) {
+    try {
+      await saveMutation.mutateAsync();
       onSuccess?.();
 
       if (initialData) {
         router.push(`/admin/products/detail/${initialData.ProductID}`);
+      } else {
+        router.push("/admin/products");
       }
+      router.refresh();
 
       alert("Product saved successfully");
-    } else {
+    } catch {
       alert("Failed to save product");
+    } finally {
+      setLoading(false);
     }
   };
 

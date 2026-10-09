@@ -1,6 +1,7 @@
 "use client";
 import Loading from "@/components/admin/Loading";
 import api from "@/lib/axios";
+import { queryKeys } from "@/lib/queryKeys";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
@@ -20,18 +21,19 @@ const NavigateToDetail = () => {
   const id = params.slug;
 
   const { data, isLoading } = useQuery({
-    queryKey: [`product/${id}`],
+    queryKey: queryKeys.productDetail(String(id)),
     queryFn: async () => {
       const res = await api.get(`/api/admin/product/${id}`);
       return res.data;
     },
   });
 
-  if (data) {
-    return <ProductDetail data={data} />;
-  }
   if (isLoading) {
     return <Loading />;
+  }
+
+  if (data) {
+    return <ProductDetail data={data} />;
   } else {
     return (
       <div className="flex items-center justify-center h-64 bg-gray-50 rounded-lg border border-dashed border-gray-300">

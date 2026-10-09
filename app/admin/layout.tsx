@@ -1,6 +1,7 @@
 "use client";
 
 import Sidebar from "@/components/admin/Sidebar";
+import { usePathname } from "next/navigation";
 import "../globals.css";
 import Providers from "../provider";
 
@@ -9,6 +10,18 @@ export default function adminLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+  const isLoginPage = pathname === "/admin/login";
+
+  // Halaman login tidak pakai sidebar + tidak perlu offset konten.
+  if (isLoginPage) {
+    return (
+      <div>
+        <Providers>{children}</Providers>
+      </div>
+    );
+  }
+
   return (
     <div>
       <Providers>

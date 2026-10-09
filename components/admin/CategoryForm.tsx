@@ -2,6 +2,8 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { queryKeys } from "@/lib/queryKeys";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -20,6 +22,7 @@ export default function CategoryForm({
   });
 
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const handleChange = (e: any) => {
     const { name, value, type, checked } = e.target;
@@ -38,32 +41,52 @@ export default function CategoryForm({
     });
   };
 
+  const saveMutation = useMutation({
+    mutationFn: async () => {
+      const res = await fetch(
+        "/api/admin/category" +
+          (initialData ? `?id=${initialData.CategoryID}` : ""),
+        {
+          method: initialData ? "PUT" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(form),
+        },
+      );
+      if (!res.ok) throw new Error("Failed to save category");
+      return res.json().catch(() => ({}));
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.categories });
+      // Dropdown produk + list produk ikut fresh karena nama kategori bisa berubah.
+      queryClient.invalidateQueries({ queryKey: queryKeys.products });
+      if (initialData?.CategoryID) {
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.categoryDetail(initialData.CategoryID),
+        });
+      }
+    },
+  });
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     setLoading(true);
 
-    const res = await fetch(
-      "/api/admin/category" +
-        (initialData ? `?id=${initialData.CategoryID}` : ""),
-      {
-        method: initialData ? "PUT" : "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      },
-    );
-
-    setLoading(false);
-
-    if (res.ok) {
+    try {
+      await saveMutation.mutateAsync();
       onSuccess?.();
 
       if (initialData) {
-        router.push(`/admin/categories/detail/${initialData.ProductID}`);
+        router.push(`/admin/categories/detail/${initialData.CategoryID}`);
+      } else {
+        router.push("/admin/categories");
       }
+      router.refresh();
 
       alert("Category saved successfully");
-    } else {
+    } catch {
       alert("Failed to save category");
+    } finally {
+      setLoading(false);
     }
   };
 

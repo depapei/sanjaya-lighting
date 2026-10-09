@@ -52,9 +52,10 @@ export default function Sidebar() {
     if (!confirm("Yakin logout?")) return;
     try {
       await api.post("/api/admin/logout");
-      queryClient.clear(); // ✅ OK: pakai instance yang sudah diambil
-      router.refresh();
+      queryClient.clear();
+      // Pindah dulu baru refresh agar refresh jalan tanpa cookie lama.
       router.push("/admin/login");
+      router.refresh();
     } catch (error) {
       console.error("Logout failed:", error);
       alert("Gagal logout");

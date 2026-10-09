@@ -1,6 +1,7 @@
 "use client";
 import CategoryForm from "@/components/admin/CategoryForm";
 import api from "@/lib/axios";
+import { queryKeys } from "@/lib/queryKeys";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
@@ -10,7 +11,7 @@ const EditCategory = () => {
   const id = params.slug;
 
   const { data, isLoading } = useQuery({
-    queryKey: [`category/${id}`],
+    queryKey: queryKeys.categoryDetail(String(id)),
     queryFn: async () => {
       const res = await api.get(`/api/admin/category/${id}`);
       return res.data;

@@ -3,9 +3,16 @@ import { NextRequest, NextResponse } from "next/server";
 export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const isAdminPage = path.startsWith("/admin");
+  const isAdminApi =
+    path.startsWith("/api/admin") && !path.startsWith("/api/admin/login");
   const isLoginPage = path === "/admin/login";
   const isAuthenticated =
     request.cookies.get("admin_session")?.value === "authenticated";
+
+  // API admin: tolak langsung 401 agar tidak bocor, jangan redirect.
+  if (isAdminApi && !isAuthenticated) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   if (isAdminPage && !isAuthenticated) {
     if (!isLoginPage) {

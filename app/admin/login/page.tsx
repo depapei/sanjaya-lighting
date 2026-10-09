@@ -7,24 +7,36 @@ export default function AdminLoginPage() {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading) return;
     setError("");
+    setLoading(true);
 
-    const res = await fetch("/api/admin/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
-    });
+    try {
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (res.ok) {
-      router.push("/admin"); // redirect ke dashboard admin
-    } else {
-      setError(data.error || "Login gagal");
+      if (res.ok) {
+        // Cookie HttpOnly baru di-set server → refresh dulu agar
+        // middleware + RSC melihat session baru, baru pindah.
+        router.push("/admin");
+        router.refresh();
+      } else {
+        setError(data.error || "Login gagal");
+      }
+    } catch {
+      setError("Tidak bisa terhubung ke server");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -54,9 +66,10 @@ export default function AdminLoginPage() {
         />
         <button
           type="submit"
-          className="w-full bg-amber-600 text-white py-2 rounded hover:bg-amber-700"
+          disabled={loading}
+          className="w-full bg-amber-600 text-white py-2 rounded hover:bg-amber-700 disabled:opacity-60"
         >
-          Login
+          {loading ? "Memproses..." : "Login"}
         </button>
       </form>
     </div>

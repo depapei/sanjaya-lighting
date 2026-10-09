@@ -8,6 +8,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import api from "@/lib/axios";
+import { queryKeys } from "@/lib/queryKeys";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
@@ -144,7 +145,7 @@ function CarouselStates({
 
 export default function FeaturedProductCarousel(props: { title?: string }) {
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["featured-products"],
+    queryKey: queryKeys.featuredProducts,
     queryFn: async () => {
       const res = await api.get("/api/featured-product");
       return res.data;
@@ -195,7 +196,7 @@ export default function FeaturedProductCarousel(props: { title?: string }) {
 
 export const ProductCarousel = (props: { title?: string }) => {
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["products"],
+    queryKey: queryKeys.products,
     queryFn: async () => {
       const res = await api.get("/api/product");
       return res.data;
