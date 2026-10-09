@@ -1,5 +1,6 @@
 "use client";
 
+import { Skeleton } from "@/components/ui/skeleton";
 import api from "@/lib/axios";
 import { queryKeys } from "@/lib/queryKeys";
 import type { ProductCategory } from "@/lib/slug";
@@ -9,7 +10,6 @@ import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
 
 export const dynamic = "force-dynamic";
 
@@ -47,7 +47,7 @@ function ProductCard({ product }: { product: CardProduct }) {
     >
       <Link href={`/products/${product.id}`}>
         <div className="group cursor-pointer">
-          <div className="relative aspect-[2/3] overflow-hidden rounded-md border border-[#E5E7EB] bg-[#F6F6F6]">
+          <div className="relative aspect-[2/3] overflow-hidden border border-[#E5E7EB] bg-[#F6F6F6]">
             {product.image ? (
               <img
                 src={product.image}
