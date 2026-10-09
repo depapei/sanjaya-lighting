@@ -10,52 +10,44 @@ const Address = () => {
   const dataAddress: addressType[] = [
     {
       type: "Alamat",
-      data: "Jl. Raya Pos Pengumben No.5, RT.9/RW.3, Srengseng, Kec. Kembangan, Kota Jakarta Barat, Daerah Khusus Ibukota Jakarta 11630, Indonesia",
+      data: "Jl. Raya Pos Pengumben No.5, RT.9/RW.3, Srengseng, Kec. Kembangan, Kota Jakarta Barat 11630, Indonesia",
     },
     {
       type: "Kontak",
       data: "+62 215870733",
     },
     {
-      type: "Tutup",
-      data: "Pukul 17:00",
+      type: "Jam Operasional",
+      data: "Setiap hari — Tutup pukul 17:00",
     },
   ];
 
-  const fnRenderAddress = (Address: addressType) => {
-    const { type, data } = Address;
-
-    return (
-      <>
-        <motion.p
-          key={type}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-md text-gray-600 mb-1 max-w-7xl mx-auto text-start"
-        >
-          <motion.span
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-sm text-gray-700 text-start font-bold"
-          >
-            {type}
-          </motion.span>
-          <br />
-          {data}
-        </motion.p>
-      </>
-    );
-  };
-
   return (
-    <motion.div className="flex flex-col sm:flex-row gap-3">
-      <EmbedMap />
-      <motion.div>
-        {dataAddress.map((addres: addressType) => fnRenderAddress(addres))}
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <div className="overflow-hidden rounded-md border border-[#E5E7EB] bg-[#F6F6F6]">
+        <EmbedMap />
+      </div>
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.4 }}
+        className="rounded-md border border-[#E5E7EB] bg-[#F6F6F6] p-4"
+      >
+        <dl className="divide-y divide-[#E5E7EB]">
+          {dataAddress.map((item) => (
+            <div key={item.type} className="py-4 first:pt-0 last:pb-0">
+              <dt className="mb-1 text-xs font-normal uppercase tracking-[0.08em] text-[#6B6B6B]">
+                {item.type}
+              </dt>
+              <dd className="text-base font-normal leading-[1.5] text-black">
+                {item.data}
+              </dd>
+            </div>
+          ))}
+        </dl>
       </motion.div>
-    </motion.div>
+    </div>
   );
 };
 

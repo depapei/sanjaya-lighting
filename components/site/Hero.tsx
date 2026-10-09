@@ -63,7 +63,7 @@ export default function Hero(props: HeroProps) {
           >
             <Link
               href="/#products"
-              className="group px-8 py-4 bg-gray-900 text-white rounded-md font-medium hover:bg-gray-800 transition-all flex items-center gap-2"
+              className="group px-8 py-4 bg-black text-white rounded-md font-medium hover:bg-gray-950 transition-all flex items-center gap-2"
             >
               Jelajahi koleksi
               <ArrowDown className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

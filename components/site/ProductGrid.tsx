@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
 
 interface Product {
@@ -19,61 +20,58 @@ interface ProductGridProps {
 
 export default function ProductGrid({ products }: ProductGridProps) {
   return (
-    <section id='products' className='py-20 bg-white'>
-      <div className='container mx-auto px-4 sm:px-6 lg:px-8'>
-        {/* Section Header */}
+    <section id='products' className='border-b border-[#E5E7EB] bg-white'>
+      <div className='mx-auto max-w-7xl px-4 py-[80px] sm:px-6 lg:px-8'>
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className='text-center mb-16'
+          transition={{ duration: 0.4 }}
+          className='mb-[30px] text-left'
         >
-          <h2 className='text-4xl md:text-5xl font-bold text-gray-900 mb-4'>
+          <p className='mb-2 text-xs font-normal uppercase tracking-[0.08em] text-[#6B6B6B]'>
+            Pilihan Editor
+          </p>
+          <h2 className='text-2xl font-bold leading-[1.21] text-black md:text-[32px] md:leading-[1.19]'>
             Featured Collection
           </h2>
-          <p className='text-xl text-gray-600 max-w-2xl mx-auto'>
+          <p className='mt-2 max-w-2xl text-base font-normal leading-[1.5] text-[#6B6B6B]'>
             Handpicked selection of our most exquisite lighting pieces
           </p>
         </motion.div>
 
-        {/* Products Grid */}
-        <div className='grid grid-cols-1 lg:grid-cols-2 gap-8'>
+        <div className='grid grid-cols-1 gap-[30px] lg:grid-cols-2'>
           {products.map((product, index) => (
             <motion.div
               key={product.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
+              transition={{ duration: 0.4, delay: Math.min(index * 0.05, 0.2) }}
             >
               <Link href={`/products/${product.slug}`}>
                 <div className='group cursor-pointer'>
-                  {/* Image Container */}
-                  <div className='relative aspect-square bg-gray-100 rounded-lg overflow-hidden mb-4'>
+                  <div className='relative aspect-square overflow-hidden rounded-md border border-[#E5E7EB] bg-[#F6F6F6]'>
                     <img
                       src={product.images[0] || 'https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?w=600&q=80'}
                       alt={product.name}
-                      className='w-full h-full object-cover transition-transform duration-500 group-hover:scale-110'
+                      className='h-full w-full object-cover'
                     />
-                    
-                    {/* Overlay on hover */}
-                    <div className='absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300' />
-                    
-                    {/* Category badge */}
-                    <div className='absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs font-medium text-gray-900'>
+                    <div className='absolute left-4 top-4 rounded-full border border-[#E5E7EB] bg-white px-3 py-1.5 text-xs font-normal text-black'>
                       {product.category}
                     </div>
                   </div>
 
-                  {/* Product Info */}
-                  <div className='space-y-2'>
-                    <h3 className='text-lg font-semibold text-gray-900 group-hover:text-amber-600 transition-colors'>
-                      {product.name}
-                    </h3>
-                    <p className='text-2xl font-bold text-gray-900'>
-                      Rp {product.price.toLocaleString('id-ID')}
-                    </p>
+                  <div className='flex items-start justify-between gap-2 px-1 pt-4'>
+                    <div className='space-y-1'>
+                      <h3 className='text-lg font-semibold leading-[1.22] text-black group-hover:opacity-60'>
+                        {product.name}
+                      </h3>
+                      <p className='text-xl font-semibold text-black'>
+                        Rp {product.price.toLocaleString('id-ID')}
+                      </p>
+                    </div>
+                    <ArrowUpRight className='mt-1 h-4 w-4 shrink-0 text-black opacity-0 transition-opacity group-hover:opacity-100' />
                   </div>
                 </div>
               </Link>
@@ -81,10 +79,9 @@ export default function ProductGrid({ products }: ProductGridProps) {
           ))}
         </div>
 
-        {/* Empty State */}
         {products.length === 0 && (
-          <div className='text-center py-20'>
-            <p className='text-xl text-gray-500'>No products available at the moment.</p>
+          <div className='rounded-md border border-[#E5E7EB] bg-white py-[50px] text-center'>
+            <p className='text-base font-normal text-[#6B6B6B]'>No products available at the moment.</p>
           </div>
         )}
       </div>

@@ -4,9 +4,7 @@ import api from "@/lib/axios";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { Lamp } from "lucide-react";
 import { BentoCard, BentoGrid } from "../magicui/bento-grid";
-import { Skeleton } from "../ui/skeleton";
 
 interface Product {
   id: string;
@@ -50,96 +48,83 @@ export default function ProductBento() {
 
   const BentoSkeleton = ({ className }: { className: string }) => (
     <div
-      className={`rounded-xl bg-gray-200 dark:bg-neutral-800 animate-pulse ${className}`}
+      className={cn(
+        "rounded-md border border-[#E5E7EB] bg-[#F6F6F6] animate-pulse",
+        className
+      )}
     />
   );
   return (
-    <section id="products" className=" bg-gradient-to-b from-gray-50 to-white">
-      <div className="bg-white overflow-hidden">
-        <div className="text-center max-w-full mx-auto">
-          <div className="py-20 bg-white">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-              {/* Section Header */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="text-start mb-8 flex flex-col gap-0"
-              >
-                <h2 className="text-2xl font-bold text-gray-900 underline">
-                  Koleksi
-                </h2>
-                <p className="text-4xl md:text-5xl text-gray-600 max-w-5xl">
-                  Koleksi pilihan dari produk lampu kami yang paling indah dan
-                  premium.
-                </p>
-              </motion.div>
+    <section id="koleksi" className="border-b border-[#E5E7EB] bg-white">
+      <div className="mx-auto max-w-7xl px-4 py-[80px] sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.4 }}
+          className="mb-[30px] text-left"
+        >
+          <p className="mb-2 text-xs font-normal uppercase tracking-[0.08em] text-[#6B6B6B]">
+            Koleksi
+          </p>
+          <h2 className="max-w-3xl text-2xl font-bold leading-[1.21] tracking-[0px] text-black md:text-[32px] md:leading-[1.19]">
+            Koleksi pilihan lampu kami yang paling indah dan premium.
+          </h2>
+        </motion.div>
 
-              {/* Products Bento */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-              >
-                {!isLoading && (
-                  <BentoGrid className="grid-cols-3">
-                    {products.map((product, index) => (
-                      <BentoCard
-                        key={product.slug}
-                        name={product.name}
-                        description={
-                          product.description
-                            ?.replace(/<[^>]+>/g, "")
-                            .slice(0, 100) + "..."
-                        }
-                        Icon={Lamp}
-                        href={`/products/${product.slug}`}
-                        cta="View Products"
-                        background={
-                          <img
-                            src={product.images}
-                            className="absolute inset-0 h-full w-full object-cover"
-                          />
-                        }
-                        className={cn(
-                          `${spanClasses[index % spanClasses.length]}`,
-                        )}
-                      />
-                    ))}
-                  </BentoGrid>
-                )}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.4 }}
+        >
+          {!isLoading && !isError && products.length > 0 && (
+            <BentoGrid className="grid-cols-3">
+              {products.map((product, index) => (
+                <BentoCard
+                  key={product.slug}
+                  name={product.name}
+                  description={
+                    product.description?.replace(/<[^>]+>/g, "").slice(0, 100) +
+                    "..."
+                  }
+                  href={`/products/${product.slug}`}
+                  cta="Lihat Produk"
+                  background={
+                    <img
+                      src={product.images}
+                      alt={product.name}
+                      className="absolute inset-0 h-full w-full object-cover"
+                    />
+                  }
+                  className={cn(`${spanClasses[index % spanClasses.length]}`)}
+                />
+              ))}
+            </BentoGrid>
+          )}
 
-                {/* Show loading while waiting for data */}
-                {isLoading && (
-                  <BentoGrid className="mt-10">
-                    {spanClasses.map((span, index) => (
-                      <BentoSkeleton key={index} className={span} />
-                    ))}
-                  </BentoGrid>
-                )}
+          {isLoading && (
+            <BentoGrid className="mt-0">
+              {spanClasses.map((span, index) => (
+                <BentoSkeleton key={index} className={span} />
+              ))}
+            </BentoGrid>
+          )}
 
-                {/* Show error if api call is failed */}
-                {isError && (
-                  <div id="loading" className="max-w-7xl">
-                    <Skeleton className="h-52 w-full bg-gray-400 text-center text-white text-xl flex justify-center items-center">
-                      Error while loading the products ...
-                    </Skeleton>
-                  </div>
-                )}
-
-                {products.length === 0 && !isLoading && (
-                  <div className="text-center py-20">
-                    <p className="text-xl text-gray-500">
-                      No products available at the moment.
-                    </p>
-                  </div>
-                )}
-              </motion.div>
+          {isError && (
+            <div className="rounded-md border border-[#E5E7EB] bg-[#F6F6F6] p-4 text-center text-sm font-normal text-[#6B6B6B]">
+              Gagal memuat koleksi. Silakan coba lagi.
             </div>
-          </div>
-        </div>
+          )}
+
+          {products.length === 0 && !isLoading && !isError && (
+            <div className="rounded-md border border-[#E5E7EB] bg-white py-[50px] text-center">
+              <p className="text-base font-normal text-[#6B6B6B]">
+                Belum ada produk saat ini.
+              </p>
+            </div>
+          )}
+        </motion.div>
       </div>
     </section>
   );

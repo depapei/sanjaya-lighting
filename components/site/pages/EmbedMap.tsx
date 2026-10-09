@@ -6,39 +6,29 @@ const EmbedMap = () => {
           className="embed-map-frame"
           src="https://maps.google.com/maps?width=600&height=400&hl=en&q=sanjaya%20lighting&t=&z=14&ie=UTF8&iwloc=B&output=embed"
           title="Sanjaya Lighting Location"
+          loading="lazy"
         ></iframe>
-        <a
-          href="https://classicjoy.games"
-          style={{
-            fontSize: '2px',
-            color: 'gray',
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            zIndex: 1,
-            maxHeight: '1px',
-            overflow: 'hidden',
-          }}
-        >
-          Retro Games Online
-        </a>
       </div>
       <style jsx>{`
         .embed-map-fixed {
           position: relative;
-          text-align: right;
-          width: 450px;
-          height: 250px;
+          width: 100%;
+          height: 100%;
+          min-height: 280px;
         }
         .embed-map-container {
           overflow: hidden;
-          background: none !important;
-          width: 450px;
-          height: 250px;
+          background: #f6f6f6;
+          width: 100%;
+          height: 100%;
+          min-height: 280px;
         }
         .embed-map-frame {
-          width: 450px !important;
-          height: 250px !important;
+          width: 100% !important;
+          height: 100% !important;
+          min-height: 280px;
+          border: 0;
+          filter: grayscale(1);
         }
       `}</style>
     </div>

@@ -6,131 +6,70 @@ import Link from "next/link";
 const AboutPage = () => {
   return (
     <section
-      className="relative min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-50 to-white overflow-hidden"
+      className="border-b border-[#E5E7EB] bg-white"
       id="about"
     >
-      {/* Background decoration */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gray-200 rounded-full blur-3xl opacity-20" />
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-amber-100 rounded-full blur-3xl opacity-20" />
-      </div>
+      <div className="mx-auto max-w-7xl px-4 py-[80px] sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 items-center gap-[50px] lg:grid-cols-2">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4 }}
+          >
+            <p className="mb-2 text-xs font-normal uppercase tracking-[0.08em] text-[#6B6B6B]">
+              Tentang Kami
+            </p>
+            <h2 className="mb-4 text-2xl font-bold leading-[1.21] tracking-[0px] text-black md:text-[32px] md:leading-[1.19]">
+              Siapa kami?{" "}
+              <span className="block">Sanjaya Lighting</span>
+            </h2>
 
-      <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 pt-20">
-        <div className="flex flex-row gap-12 items-center">
-          <div className="text-start max-w-7xl mx-auto">
-            {/* Main heading */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              <h1 className="text-2xl md:text-4xl lg:text-6xl font-bold tracking-tight text-gray-900 mb-6">
-                Siapa{" "}
-                <span className="underline">
-                  <Link href="/#home">kami</Link>
-                </span>
-                ?
-                <span className="text-5xl md:text-7xl lg:text-8xl block mt-2 bg-gradient-to-r from-amber-600 to-amber-400 bg-clip-text text-transparent pb-4">
-                  Sanjaya Lighting
-                </span>
-              </h1>
-            </motion.div>
-
-            {/* Subtitle */}
-            {/* <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className='text-sm md:text-lg text-gray-600 mb-12 max-w-7xl mx-auto'
-            >
-              <div className='mt-20'>
-                <TextReveal text='merupakan toko online yang bergerak dibidang Elektrik perlengkapan Rumah Tangga beserta Aksesoris nya. Selain untuk memasarkan produk kami dalam jangkauan Daerah yang lebih luas, kami senantiasa siap membantu para Pelanggan untuk menemukan produk-produk berupa Lampu Hemat Energy dan aksesoris nya agar dapat lebih hemat pemakaian Listrik di rumah serta informasi-informasi seputar Lampu Hemat Energy secara ONLINE dengan harga yang TERJANGKAU dan BERSAING.'
-                />
-              </div>
-            </motion.div> */}
-
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-lg md:text-xl text-gray-600 mb-6 max-w-7xl mx-auto text-start"
-            >
-              Sanjaya Lighting adalah toko online perlengkapan elektrik dan
-              aksesoris rumah tangga. Kami membantu pelanggan menemukan lampu
-              hemat energi dan aksesorisnya dengan harga terjangkau. Berlokasi
-              di Kebon Jeruk, Jakarta Barat, kami menawarkan produk asli
+            <p className="mb-4 max-w-xl text-base font-normal leading-[1.5] text-[#333333]">
+              Sanjaya Lighting adalah toko perlengkapan elektrik dan aksesoris
+              rumah tangga. Kami membantu pelanggan menemukan lampu hemat
+              energi dan aksesorisnya dengan harga terjangkau. Berlokasi di
+              Kebon Jeruk, Jakarta Barat, kami menawarkan produk asli
               berkualitas, termasuk lampu hias, LED, PLC, dan TLD.
-            </motion.p>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-lg md:text-xl text-gray-600 mb-12 max-w-7xl mx-auto text-start"
-            >
-              Selain menjual berbagai lampu hias mewah, Sanjaya Lighting juga
+            </p>
+            <p className="mb-[30px] max-w-xl text-base font-normal leading-[1.5] text-[#333333]">
+              Selain menjual berbagai lampu hias, Sanjaya Lighting juga
               menyediakan jasa cuci lampu hias dan kristal di Jakarta dengan
-              tenaga ahli berpengalaman. Kami juga menjadi distributor lampu
-              hias berkualitas untuk rumah dan bisnis.
-            </motion.p>
+              tenaga ahli berpengalaman.
+            </p>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="flex flex-col sm:flex-row gap-4 justify-start items-start"
+            <Link
+              href="/#contact"
+              className="inline-flex h-9 items-center gap-2 rounded-sm border border-black bg-transparent px-4 text-base font-normal text-black transition-colors hover:bg-black hover:text-white"
             >
-              {/* CTA Buttons */}
-              <Link
-                href="/#contact"
-                className="group px-8 py-4 bg-gray-900 text-white rounded-md font-medium hover:bg-gray-800 transition-all flex items-center gap-2 text-center justify-center"
-              >
-                Hubungi Kami
-                <ArrowDown className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </motion.div>
-          </div>
-          <div className="text-start max-w-7xl mx-auto hidden lg:block">
-            {/* Store Image */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1, delay: 0.6 }}
-              className="rounded-xl shadow-lg"
-            >
-              <Image
-                src="/assets/image/store-pic.jpg"
-                alt="Luxury Lighting"
-                height={933 * 1.5}
-                width={619 * 1.5}
-                className="rounded-xl"
-                // Setengah
-                // height={466.5}
-                // width={309.5}
-              />
+              Hubungi Kami
+              <ArrowDown className="h-4 w-4" />
+            </Link>
+          </motion.div>
 
-              {/* Decorative elements */}
-              {/* <div className="absolute -top-6 -left-6 w-24 h-24 bg-amber-400 rounded-full blur-2xl opacity-30 hidden lg:block" />
-              <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-gray-400 rounded-full blur-2xl opacity-20 hidden lg:block" /> */}
-            </motion.div>
-          </div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="overflow-hidden rounded-md border border-[#E5E7EB] bg-[#F6F6F6]"
+          >
+            <Image
+              src="/assets/image/store-pic.jpg"
+              alt="Toko Sanjaya Lighting"
+              height={700}
+              width={620}
+              className="aspect-[4/3] w-full object-cover"
+            />
+            <div className="flex items-center justify-between border-t border-[#E5E7EB] bg-white px-4 py-4">
+              <p className="text-sm font-normal text-black">Toko Kami</p>
+              <p className="text-xs font-normal text-[#6B6B6B]">
+                Kebon Jeruk, Jakarta Barat
+              </p>
+            </div>
+          </motion.div>
         </div>
       </div>
-
-      {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 1 }}
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-      >
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-          className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center"
-        >
-          <motion.div className="w-1 h-3 bg-gray-400 rounded-full mt-2" />
-        </motion.div>
-      </motion.div>
     </section>
   );
 };

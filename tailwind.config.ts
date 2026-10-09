@@ -9,6 +9,16 @@ const config: Config = {
   ],
   theme: {
   	extend: {
+  		fontFamily: {
+  			sans: ['"Suisse Intl Medium"', 'Helvetica', 'Arial', 'sans-serif'],
+  		},
+  		spacing: {
+  			xs: '6px',
+  			sm: '16px',
+  			md: '30px',
+  			lg: '50px',
+  			xl: '80px',
+  		},
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
@@ -43,6 +53,13 @@ const config: Config = {
   			border: 'hsl(var(--border))',
   			input: 'hsl(var(--input))',
   			ring: 'hsl(var(--ring))',
+  			ink: '#000000',
+  			smoke: '#6B6B6B',
+  			line: '#E5E7EB',
+  			gallery: '#F6F6F6',
+  			inkSoft: '#333333',
+  			inkMute: '#666666',
+  			error: '#B00020',
   			chart: {
   				'1': 'hsl(var(--chart-1))',
   				'2': 'hsl(var(--chart-2))',
@@ -52,9 +69,12 @@ const config: Config = {
   			}
   		},
   		borderRadius: {
-  			lg: 'var(--radius)',
-  			md: 'calc(var(--radius) - 2px)',
-  			sm: 'calc(var(--radius) - 4px)'
+  			none: '0px',
+  			sm: '4px',
+  			md: '8px',
+  			lg: '12px',
+  			xl: '16px',
+  			full: '9999px',
   		}
   	}
   },

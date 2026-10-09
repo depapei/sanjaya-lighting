@@ -1,11 +1,10 @@
 "use client";
-import Loading from "@/components/admin/Loading";
 import ProductCarousel from "@/components/site/ProductCarousel";
 import api from "@/lib/axios";
 
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { ArrowLeft, ShoppingCart } from "lucide-react";
+import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { notFound, useRouter } from "next/navigation";
 
@@ -18,150 +17,112 @@ interface ProductPageProps {
 }
 
 export default function ProductPage({ params }: ProductPageProps) {
-  // const [jsonLd, setJsonLd] = useState({
-  //   "@context": "https://schema.org",
-  //   "@type": "Product",
-  //   offers: {
-  //     "@type": "Offer",
-  //   },
-  // });
-
   const router = useRouter();
 
   const {
     data: product,
     isLoading,
     isError,
-    // isSuccess,
   } = useQuery({
     queryKey: [`product/${params.slug}`],
     queryFn: async () => {
       const res = await api.get(`/api/product/${params.slug}`);
-      console.log(res.data);
       return res.data;
     },
   });
-  // return;
 
   if (isLoading) {
-    return <Loading />;
+    return (
+      <div className="bg-white pb-[80px] pt-[164px]">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 gap-[50px] lg:grid-cols-2">
+            <div className="aspect-square animate-pulse rounded-md border border-[#E5E7EB] bg-[#F6F6F6]" />
+            <div className="space-y-4">
+              <div className="h-4 w-24 animate-pulse rounded-sm bg-[#F6F6F6]" />
+              <div className="h-8 w-3/4 animate-pulse rounded-sm bg-[#F6F6F6]" />
+              <div className="h-24 w-full animate-pulse rounded-md border border-[#E5E7EB] bg-[#F6F6F6]" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (isError || !product) {
     return notFound();
   }
 
-  // JSON-LD Schema for SEO
-  // useEffect(() => {
-  //   setJsonLd ({
-  //     "@context": "https://schema.org",
-  //     "@type": "Product",
-  //     name: product.Name,
-  //     description: product.Description,
-  //     image: product.ImageBase64,
-  //     offers: {
-  //       "@type": "Offer",
-  //       price: product.price,
-  //       priceCurrency: "IDR",
-  //       availability: "https://schema.org/InStock",
-  //     },
-  //   });
-  // }, [isSuccess])
-
   return (
     <>
-      <script
-        type="application/ld+json"
-        // dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <script type="application/ld+json" />
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4 }}
       >
-        <article className="min-h-screen pt-24 pb-16 bg-white">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            {/* Back Button */}
+        <article className="bg-white pb-[80px] pt-[164px]">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <Link
               href={""}
               onClick={() => router.back()}
-              className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-8 transition-colors"
+              className="mb-[30px] inline-flex items-center gap-2 p-0 text-sm font-normal text-black transition-opacity hover:opacity-60"
             >
-              <ArrowLeft className="w-5 h-5" />
-              Back
+              <ArrowLeft className="h-4 w-4" />
+              Kembali
             </Link>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-              {/* Images */}
-              <div className="space-y-4">
-                <div className="aspect-square bg-gray-100 rounded-2xl overflow-hidden">
-                  <img
-                    src={`data:image/jpeg;base64,${product.ImageBase64}`}
-                    alt={product.Name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-
-                {/* Thumbnail images */}
-                {/* <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
-                  <img
-                    src={`data:image/jpeg;base64,${product.ImageBase64}`}
-                    alt={`${product.Name} Picture`}
-                    className="w-full h-full object-cover"
-                  />
-                </div> */}
+            <div className="grid grid-cols-1 gap-[50px] lg:grid-cols-2">
+              <div className="overflow-hidden rounded-md border border-[#E5E7EB] bg-[#F6F6F6]">
+                <img
+                  src={`data:image/jpeg;base64,${product.ImageBase64}`}
+                  alt={product.Name}
+                  className="aspect-square w-full object-cover"
+                />
               </div>
 
-              {/* Product Details */}
-              <div className="space-y-6">
-                {/* Category */}
-                {/* <div className="inline-block px-4 py-2 bg-amber-100 text-amber-800 rounded-full text-sm font-medium">
-                  {product.category}
-                </div> */}
-
-                {/* Title */}
-                <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
+              <div>
+                <p className="mb-2 text-xs font-normal uppercase tracking-[0.08em] text-[#6B6B6B]">
+                  Detail Produk
+                </p>
+                <h1 className="mb-4 text-[32px] font-bold leading-[1.19] tracking-[0px] text-black">
                   {product.Name}
                 </h1>
 
-                {/* Price */}
-                {/* <div className="text-4xl font-bold text-gray-900">
-                  Rp {parseFloat(product.Price).toLocaleString("id-ID")}
-                </div> */}
+                <div className="mb-[16px] inline-flex rounded-full border border-[#E5E7EB] bg-[#F6F6F6] px-3 py-1.5 text-xs font-normal text-black">
+                  Stok Tersedia
+                </div>
 
-                {/* Description */}
-                <div className="prose prose-lg">
-                  <p className="text-gray-600 leading-relaxed whitespace-pre-line">
+                <div className="prose prose-lg max-w-none">
+                  <p className="whitespace-pre-line text-base font-normal leading-[1.5] text-[#333333]">
                     {product.Description}
                   </p>
                 </div>
 
-                {/* CTA Button */}
-                <div className="pt-6">
-                  <button className="w-full md:w-auto px-8 py-4 bg-gray-900 text-white rounded-md font-medium hover:bg-gray-800 transition-all flex items-center justify-center gap-2 hover:animate-pulse">
-                    <ShoppingCart className="w-5 h-5" />
-                    Contact for Purchase
+                <div className="pt-[30px]">
+                  <button className="inline-flex h-9 w-full items-center justify-center gap-2 rounded-sm border border-black bg-transparent px-4 text-base font-normal text-black transition-colors hover:bg-black hover:text-white md:w-auto">
+                    Hubungi untuk Pembelian
+                    <ArrowUpRight className="h-4 w-4" />
                   </button>
                 </div>
 
-                {/* Product Info */}
-                <div className="border-t border-gray-200 pt-6 space-y-4">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Product ID:</span>
-                    <span className="font-medium text-gray-900">
+                <div className="mt-[30px] space-y-0 border-t border-[#E5E7EB]">
+                  <div className="flex justify-between border-b border-[#E5E7EB] py-4 text-sm">
+                    <span className="font-normal text-[#6B6B6B]">Product ID</span>
+                    <span className="font-normal text-black">
                       {product.ProductID}
                     </span>
                   </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Status:</span>
-                    <span className="font-medium text-green-600">In Stock</span>
+                  <div className="flex justify-between border-b border-[#E5E7EB] py-4 text-sm">
+                    <span className="font-normal text-[#6B6B6B]">Status</span>
+                    <span className="font-normal text-black">In Stock</span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <hr className="border border-gray-800 mt-20 container mx-auto px-4 sm:px-6 lg:px-8" />
-          <ProductCarousel title="Our Featured Collection" />
+          <div className="mx-auto mt-[80px] max-w-7xl border-t border-[#E5E7EB] px-4 sm:px-6 lg:px-8">
+            <ProductCarousel title="Our Featured Collection" />
+          </div>
         </article>
       </motion.div>
     </>
