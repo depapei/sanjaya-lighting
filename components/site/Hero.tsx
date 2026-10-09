@@ -84,7 +84,7 @@ export default function Hero({ children }: HeroProps) {
   return (
     <section
       aria-labelledby="hero-heading"
-      className="border-b border-[#E5E7EB] bg-white pt-[72px]"
+      className="border-b border-[#E5E7EB] bg-white"
     >
 
       {showFallback ? (

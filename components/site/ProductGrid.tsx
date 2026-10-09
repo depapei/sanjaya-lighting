@@ -8,7 +8,6 @@ interface Product {
   id: string;
   name: string;
   slug: string;
-  price: number;
   images: string[];
   category: string;
   description: string;
@@ -67,9 +66,6 @@ export default function ProductGrid({ products }: ProductGridProps) {
                       <h3 className='text-lg font-semibold leading-[1.22] text-black group-hover:opacity-60'>
                         {product.name}
                       </h3>
-                      <p className='text-xl font-semibold text-black'>
-                        Rp {product.price.toLocaleString('id-ID')}
-                      </p>
                     </div>
                     <ArrowUpRight className='mt-1 h-4 w-4 shrink-0 text-black opacity-0 transition-opacity group-hover:opacity-100' />
                   </div>

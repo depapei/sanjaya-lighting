@@ -23,7 +23,7 @@ model Product {
   ProductID     Int       @id @default(autoincrement())
   Name          String    @db.VarChar(255)
   Description   String?
-  Price         Decimal   @db.Decimal(18, 2)
+  Price         Decimal?  @db.Decimal(18, 2)
   DiscountPrice Decimal?  @db.Decimal(18, 2)
   Stock         Int       @default(0)
   ImageBase64   String?

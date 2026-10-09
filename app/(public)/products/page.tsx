@@ -17,8 +17,6 @@ interface ApiProduct {
   ProductID: string;
   Name: string;
   Description?: string | null;
-  Price?: string | number | null;
-  DiscountPrice?: string | number | null;
   ImageBase64?: string | null;
   Category?: string | null;
 }
@@ -26,25 +24,14 @@ interface ApiProduct {
 interface CardProduct {
   id: string;
   name: string;
-  price: number | null;
   image: string;
   category: string;
-}
-
-function toPrice(value: unknown): number | null {
-  if (typeof value === "number" && Number.isFinite(value)) return value;
-  if (typeof value === "string" && value.trim() !== "") {
-    const n = parseFloat(value);
-    return Number.isFinite(n) ? n : null;
-  }
-  return null;
 }
 
 function mapProduct(p: ApiProduct): CardProduct {
   return {
     id: p.ProductID,
     name: p.Name,
-    price: toPrice(p.Price),
     image: p.ImageBase64 ? `data:image/jpeg;base64,${p.ImageBase64}` : "",
     category: p.Category || "Uncategorized",
   };
@@ -81,11 +68,6 @@ function ProductCard({ product }: { product: CardProduct }) {
               <h3 className="text-base font-normal leading-snug text-black group-hover:opacity-60">
                 {product.name}
               </h3>
-              {product.price !== null && (
-                <p className="text-xl font-semibold text-black">
-                  Rp {product.price.toLocaleString("id-ID")}
-                </p>
-              )}
             </div>
             <ArrowUpRight className="mt-1 h-4 w-4 shrink-0 text-black opacity-0 transition-opacity group-hover:opacity-100" />
           </div>
@@ -237,7 +219,6 @@ function ProductsContent() {
               <div key={n} className="space-y-3">
                 <Skeleton className="aspect-[2/3] w-full rounded-md" />
                 <Skeleton className="h-4 w-3/4" />
-                <Skeleton className="h-5 w-1/2" />
               </div>
             ))}
           </div>

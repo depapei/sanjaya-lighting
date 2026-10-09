@@ -5,6 +5,7 @@ import api from "@/lib/axios";
 import { queryKeys } from "@/lib/queryKeys";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const CategoriesPage = () => {
   const route = useRouter();
@@ -24,7 +25,7 @@ const CategoriesPage = () => {
     },
     onError: (error) => {
       console.error("Delete failed:", error);
-      alert("Gagal menghapus produk");
+      toast.error("Gagal menghapus kategori.");
     },
   });
 

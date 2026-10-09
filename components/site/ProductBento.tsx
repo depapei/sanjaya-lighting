@@ -11,7 +11,6 @@ interface Product {
   id: string;
   name: string;
   slug: string;
-  price: number;
   images: string;
   category: string;
   description: string;
@@ -32,7 +31,6 @@ export default function ProductBento() {
         name: product.Name,
         description: product.Description || "",
         slug: product.ProductID,
-        price: parseInt(product.Price),
         images: `data:image/jpeg;base64,${product.ImageBase64}`,
         category: product.Category || "Uncategorized",
       }))

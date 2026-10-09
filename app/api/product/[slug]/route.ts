@@ -1,4 +1,4 @@
-// app/api/product/route.ts
+// app/api/product/[slug]/route.ts — publik, tanpa harga internal.
 import { deobfuscateId } from "@/idObfuscator";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
@@ -17,12 +17,23 @@ export async function GET(
   try {
     const product = await prisma.product.findUnique({
       where: { ProductID: id, IsActive: true },
+      select: {
+        ProductID: true,
+        Name: true,
+        Description: true,
+        Stock: true,
+        ImageBase64: true,
+        ImageMimeType: true,
+        IsFeatured: true,
+        Category: { select: { Name: true } },
+      },
     });
 
     if (product) {
       const encryptedId_product = {
         ...product,
         ProductID: paramsId,
+        Category: product.Category?.Name ?? null,
       };
       return NextResponse.json(encryptedId_product);
     } else {

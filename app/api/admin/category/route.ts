@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@/generated/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 const validateAuthentication = (req: NextRequest) => {
@@ -26,7 +27,8 @@ export async function POST(req: NextRequest) {
     const { Name } = body;
 
     // Validasi wajib
-    if (!Name) {
+    const trimmed = typeof Name === "string" ? Name.trim() : "";
+    if (!trimmed) {
       return NextResponse.json(
         { message: "Name are required" },
         { status: 400 },
@@ -35,12 +37,21 @@ export async function POST(req: NextRequest) {
 
     const category = await prisma.category.create({
       data: {
-        Name,
+        Name: trimmed,
       },
     });
 
     return NextResponse.json(category, { status: 201 });
   } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002"
+    ) {
+      return NextResponse.json(
+        { message: "Category name already exists" },
+        { status: 409 },
+      );
+    }
     console.error(error);
     return NextResponse.json(
       { message: "Failed to create category" },

@@ -6,6 +6,7 @@ import { queryKeys } from "@/lib/queryKeys";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 
 type ProductFormProps = {
   initialData?: any;
@@ -82,9 +83,9 @@ export default function CategoryForm({
       }
       router.refresh();
 
-      alert("Category saved successfully");
+      toast.success("Kategori berhasil disimpan.");
     } catch {
-      alert("Failed to save category");
+      toast.error("Gagal menyimpan kategori.");
     } finally {
       setLoading(false);
     }

@@ -15,8 +15,6 @@ export async function GET() {
       select: {
         ProductID: true,
         Description: true,
-        Price: true,
-        DiscountPrice: true,
         Name: true,
         Stock: true,
         ImageBase64: true,

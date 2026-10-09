@@ -8,9 +8,37 @@ const validateAuthentication = (req: NextRequest) => {
   return isAuthenticated;
 };
 
+/** Harga internal: opsional, hanya dipakai di back office. */
+function normalizePrice(value: unknown): number | null {
+  if (value === undefined || value === null || value === "") return null;
+  const n = typeof value === "number" ? value : parseFloat(String(value));
+  if (!Number.isFinite(n) || n < 0) return null;
+  return n;
+}
+
+function normalizeStock(value: unknown): number {
+  const n =
+    typeof value === "number" ? value : parseInt(String(value ?? "0"), 10);
+  if (!Number.isFinite(n) || n < 0) return 0;
+  return Math.floor(n);
+}
+
+function normalizeCategoryId(value: unknown): number | null {
+  if (value === undefined || value === null || value === "") return null;
+  const n = typeof value === "number" ? value : parseInt(String(value), 10);
+  if (!Number.isFinite(n) || n <= 0) return null;
+  return n;
+}
+
+function toNullableString(value: unknown): string | null {
+  if (value === undefined || value === null) return null;
+  const s = String(value);
+  return s === "" ? null : s;
+}
+
 /**
- * POST /api/product
- * Create product
+ * POST /api/admin/products
+ * Create product — Price opsional (harga internal, tidak tampil di depan).
  */
 export async function POST(req: NextRequest) {
   try {
@@ -32,29 +60,34 @@ export async function POST(req: NextRequest) {
       ImageBase64,
       ImageMimeType,
       IsFeatured,
+      IsActive,
       CategoryID,
+      tags,
+      CreatedBy,
     } = body;
 
-    // Validasi wajib
-    if (!Name || !Price) {
+    // Hanya nama yang wajib
+    if (!Name || String(Name).trim() === "") {
       return NextResponse.json(
-        { message: "Name and Price are required" },
+        { message: "Product name is required" },
         { status: 400 },
       );
     }
 
     const product = await prisma.product.create({
       data: {
-        Name,
-        Description,
-        Price,
-        DiscountPrice,
-        Stock: Stock ?? 0,
-        ImageBase64,
-        ImageMimeType,
+        Name: String(Name).trim(),
+        Description: toNullableString(Description),
+        Price: normalizePrice(Price),
+        DiscountPrice: normalizePrice(DiscountPrice),
+        Stock: normalizeStock(Stock),
+        ImageBase64: toNullableString(ImageBase64),
+        ImageMimeType: toNullableString(ImageMimeType),
         IsFeatured: IsFeatured ?? false,
-        IsActive: true,
-        CategoryID,
+        IsActive: IsActive ?? true,
+        CategoryID: normalizeCategoryId(CategoryID),
+        tags: toNullableString(tags),
+        CreatedBy: toNullableString(CreatedBy) ?? "admin",
         CreatedAt: new Date(),
       },
     });
@@ -80,7 +113,8 @@ export async function GET() {
         Category: true,
         Description: true,
         DiscountPrice: true,
-        ImageBase64: false,
+        ImageBase64: true,
+        ImageMimeType: true,
         IsActive: true,
         IsFeatured: true,
         ProductID: true,
@@ -101,8 +135,8 @@ export async function GET() {
 }
 
 /**
- * PUT /api/product?id=1
- * Update product
+ * PUT /api/admin/products?id=1
+ * Update product — whitelist field agar aman.
  */
 export async function PUT(req: NextRequest) {
   try {
@@ -124,12 +158,40 @@ export async function PUT(req: NextRequest) {
 
     const body = await req.json();
 
+    if (
+      body.Name !== undefined &&
+      (body.Name === null || String(body.Name).trim() === "")
+    ) {
+      return NextResponse.json(
+        { message: "Product name cannot be empty" },
+        { status: 400 },
+      );
+    }
+
+    const data: Record<string, unknown> = { UpdatedAt: new Date() };
+    if (body.Name !== undefined) data.Name = String(body.Name).trim();
+    if (body.Description !== undefined)
+      data.Description = toNullableString(body.Description);
+    if (body.Price !== undefined) data.Price = normalizePrice(body.Price);
+    if (body.DiscountPrice !== undefined)
+      data.DiscountPrice = normalizePrice(body.DiscountPrice);
+    if (body.Stock !== undefined) data.Stock = normalizeStock(body.Stock);
+    if (body.ImageBase64 !== undefined)
+      data.ImageBase64 = toNullableString(body.ImageBase64);
+    if (body.ImageMimeType !== undefined)
+      data.ImageMimeType = toNullableString(body.ImageMimeType);
+    if (body.IsFeatured !== undefined)
+      data.IsFeatured = Boolean(body.IsFeatured);
+    if (body.IsActive !== undefined) data.IsActive = Boolean(body.IsActive);
+    if (body.CategoryID !== undefined)
+      data.CategoryID = normalizeCategoryId(body.CategoryID);
+    if (body.tags !== undefined) data.tags = toNullableString(body.tags);
+    if (body.UpdatedBy !== undefined)
+      data.UpdatedBy = toNullableString(body.UpdatedBy);
+
     const product = await prisma.product.update({
       where: { ProductID: id },
-      data: {
-        ...body,
-        UpdatedAt: new Date(),
-      },
+      data: data as never,
     });
 
     return NextResponse.json(product);
@@ -143,7 +205,7 @@ export async function PUT(req: NextRequest) {
 }
 
 /**
- * DELETE /api/product?id=1
+ * DELETE /api/admin/products?id=1
  * Soft delete product
  */
 export async function DELETE(req: NextRequest) {
