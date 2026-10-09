@@ -73,7 +73,7 @@ export default function ProductPage({ params }: ProductPageProps) {
             </Link>
 
             <div className="grid grid-cols-1 gap-[50px] lg:grid-cols-2">
-              <div className="overflow-hidden rounded-md border border-[#E5E7EB] bg-[#F6F6F6]">
+              <div className="overflow-hidden rounded-sm border border-[#E5E7EB] bg-[#F6F6F6]">
                 <img
                   src={`data:image/jpeg;base64,${product.ImageBase64}`}
                   alt={product.Name}
