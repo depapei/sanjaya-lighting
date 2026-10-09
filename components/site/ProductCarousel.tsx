@@ -67,7 +67,7 @@ function ProductCard({ product }: { product: Product }) {
       }}
       className="group cursor-pointer border border-transparent transition-colors hover:border-black"
     >
-      <div className="aspect-[2/3] overflow-hidden rounded-md border border-[#E5E7EB] bg-[#F6F6F6]">
+      <div className="aspect-[2/3] overflow-hidden border border-[#E5E7EB] bg-[#F6F6F6]">
         <img
           src={product.images}
           alt={product.name}

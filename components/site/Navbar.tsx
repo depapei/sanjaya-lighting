@@ -159,12 +159,12 @@ export default function Navbar() {
       <motion.nav
         initial={false}
         animate={{
-          backgroundColor: scrolled ? 'rgb(0, 0, 0)' : 'rgba(255, 255, 255, 0.8)',
+          backgroundColor: scrolled ? 'rgb(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.8)',
           borderColor: scrolled ? 'rgba(255, 255, 255, 0.2)' : 'rgb(229, 231, 235)',
           // Fix rounded bug: pill saat tertutup, kartu rounded saat menu mobile terbuka
           // agar dropdown tidak merusak bentuk pill
-          borderRadius: isOpen ? 20 : 999,
-          backdropFilter: scrolled ? 'blur(0px)' : 'blur(12px)',
+          borderRadius: 4,
+          backdropFilter: 'blur(12px)',
         }}
         transition={{ duration: reduceMotion ? 0 : 0.35, ease: 'easeOut' }}
         style={{ WebkitBackdropFilter: scrolled ? 'blur(0px)' : 'blur(12px)' }}
