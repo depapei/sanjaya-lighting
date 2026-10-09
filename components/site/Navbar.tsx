@@ -244,10 +244,10 @@ export default function Navbar() {
         }`}
       >
         <div className="min-w-0 px-4 sm:px-6">
-          <div className="flex h-12 min-w-0 items-center justify-between gap-4 md:justify-start md:gap-8 lg:gap-12">
+          <div className="flex h-10 min-w-0 items-center justify-between gap-4 md:justify-start md:gap-8 lg:gap-12">
             <Link href="/" className="flex min-w-0 shrink flex-col leading-none">
               <span
-                className={`truncate text-sm font-bold tracking-tight transition-colors duration-300 ${
+                className={`truncate text-xs font-bold tracking-tight transition-colors duration-300 ${
                   scrolled ? 'text-white' : 'text-black'
                 }`}
               >
@@ -265,7 +265,7 @@ export default function Navbar() {
             <div className="hidden items-center gap-8 md:flex">
               <Link
                 href="/#home"
-                className={`p-0 text-base font-normal transition-colors duration-300 hover:opacity-60 ${linkColor}`}
+                className={`p-0 text-sm font-normal transition-colors duration-300 hover:opacity-60 ${linkColor}`}
               >
                 Home
               </Link>
@@ -289,7 +289,7 @@ export default function Navbar() {
                   href="/products"
                   aria-haspopup="true"
                   aria-expanded={productsOpen}
-                  className={`flex items-center gap-1 p-0 text-base font-normal transition-colors duration-300 hover:opacity-60 ${linkColor}`}
+                  className={`flex items-center gap-1 p-0 text-sm font-normal transition-colors duration-300 hover:opacity-60 ${linkColor}`}
                 >
                   Products
                   <ChevronDown
@@ -429,7 +429,7 @@ export default function Navbar() {
                 <Link
                   key={link.href + link.label}
                   href={link.href}
-                  className={`p-0 text-base font-normal transition-colors duration-300 hover:opacity-60 ${linkColor}`}
+                  className={`p-0 text-sm font-normal transition-colors duration-300 hover:opacity-60 ${linkColor}`}
                 >
                   {link.label}
                 </Link>
@@ -570,7 +570,7 @@ export default function Navbar() {
                   <Link
                     key={link.href + link.label}
                     href={link.href}
-                    className={`block rounded-[10px] px-3 py-2 text-sm font-normal transition-colors duration-300 ${
+                    className={`block rounded-[10px] px-3 py-2 text-xs font-normal transition-colors duration-300 ${
                       scrolled
                         ? 'text-white hover:bg-white/10'
                         : 'text-black hover:bg-[#F6F6F6]'
